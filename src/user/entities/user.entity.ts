@@ -1,0 +1,89 @@
+import {
+  AllowNull,
+  Column,
+  IsEmail,
+  IsNumeric,
+  Model,
+  Table,
+  Default,
+  Unique,
+  PrimaryKey,
+  DataType,
+  AutoIncrement
+} from 'sequelize-typescript';
+
+@Table({ timestamps: true, tableName: 'user'})
+export class User extends Model {
+
+  @PrimaryKey
+  @AutoIncrement
+  @Column(DataType.INTEGER)
+  id_user: number;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(20))
+  name: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(20))
+  last_name: string;
+
+  @AllowNull(false)
+  @Column(DataType.DATE)
+  date_birth: Date;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(10))
+  gender: string;
+
+  @AllowNull(false)
+  @IsEmail
+  @Column(DataType.STRING(120))
+  email: string;
+
+  @IsNumeric
+  @AllowNull(false)
+  @Column(DataType.BIGINT)
+  phone_number: number;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(50))
+  street: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(5))
+  cp: number;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(20))
+  city: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(20))
+  country: string;
+
+  @AllowNull(false)
+  @Default('dentist')
+  @Column(DataType.STRING(10))
+  role: string;
+
+  @Unique(true)
+  @AllowNull(false)
+  @Column(DataType.STRING(24))
+  username: string;
+
+  @AllowNull(false)
+  @Column(DataType.STRING(120))
+  password: string;
+
+  @AllowNull(false)
+  @Default(true)
+  @Column(DataType.BOOLEAN)
+  status: boolean;
+
+  @Column(DataType.STRING(120))
+  image: string;
+
+  @Column(DataType.STRING(8))
+  code: string;
+}
