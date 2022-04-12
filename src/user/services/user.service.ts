@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateUserDto } from '../dtos/user.dto';
+import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { FindOptions, Op } from 'sequelize';
+import { FindOptions, Op, where } from 'sequelize';
 
 @Injectable()
 export class UserService {
@@ -80,6 +80,11 @@ export class UserService {
     )
     userDB.status = setValue;
     return await userDB.save();
+  }
+
+  async update(userId: number, changes: UpdateUserDto) {
+    const { password, ...rest } = changes;
+    return await this.userModel.update(rest, { where: { id_user: userId }});
   }
 
 }
