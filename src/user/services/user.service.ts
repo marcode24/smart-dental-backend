@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
@@ -51,6 +51,23 @@ export class UserService {
       };
     }
     return await this.userModel.findAll(options);
+  }
+
+  async findById(userId: string) {
+    const validUserId = Number(userId);
+    if(!validUserId) {
+      return new BadRequestException('must provide a valid id');
+    }
+    const userFound = await this.userModel.findByPk(
+      validUserId,
+      {
+        attributes: { exclude: ['password'] }
+      }
+    );
+    if(!userFound) {
+      return new NotFoundException(`user not found with id: ${validUserId}`);
+    }
+    return userFound;
   }
 
 }
