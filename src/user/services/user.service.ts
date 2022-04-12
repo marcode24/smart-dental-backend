@@ -70,4 +70,16 @@ export class UserService {
     return userFound;
   }
 
+  async setStatusUser(userId: string, value:boolean) {
+    const setValue = Boolean(value);
+    const userDB = await this.userModel.findByPk(
+      userId,
+      {
+        attributes: ['id_user', 'status']
+      }
+    )
+    userDB.status = setValue;
+    return await userDB.save();
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
 
@@ -26,6 +26,14 @@ export class UsersController {
   @Post()
   create(@Body() payload: CreateUserDto) {
     return this.userService.create(payload);
+  }
+
+  @Patch('/:id')
+  changeStatus(
+    @Param('id') userId: string,
+    @Body('status') status: boolean
+  ) {
+    return this.userService.setStatusUser(userId, status);
   }
 
 }
