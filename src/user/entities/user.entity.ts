@@ -9,10 +9,10 @@ import {
   Unique,
   PrimaryKey,
   DataType,
-  AutoIncrement
+  AutoIncrement,
 } from 'sequelize-typescript';
 
-@Table({ timestamps: true, tableName: 'user'})
+@Table({ timestamps: true, tableName: 'user', initialAutoIncrement: '1000'})
 export class User extends Model {
 
   @PrimaryKey
