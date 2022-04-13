@@ -87,4 +87,9 @@ export class UserService {
     return await this.userModel.update(rest, { where: { id_user: userId }});
   }
 
+  async findByUsername(username: string) {
+    const user = await this.userModel.findOne({ where: { username } });
+    return user.toJSON();
+  }
+
 }
