@@ -4,7 +4,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Sequelize } from "sequelize-typescript";
 
 import config from 'src/config';
+
 import { User } from 'src/user/entities/user.entity';
+import { Service } from 'src/service/entities/service.entity';
 
 @Module({
   imports: [
@@ -39,7 +41,7 @@ import { User } from 'src/user/entities/user.entity';
           password,
           database: dbName
         });
-        sequelize.addModels([User])
+        sequelize.addModels([User, Service])
         await sequelize.sync();
         return sequelize;
       },
