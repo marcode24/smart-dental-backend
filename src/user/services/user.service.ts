@@ -53,24 +53,20 @@ export class UserService {
     return await this.userModel.findAll(options);
   }
 
-  async findById(userId: string) {
-    const validUserId = Number(userId);
-    if(!validUserId) {
-      return new BadRequestException('must provide a valid id');
-    }
+  async findById(userId: number) {
     const userFound = await this.userModel.findByPk(
-      validUserId,
+      userId,
       {
         attributes: { exclude: ['password'] }
       }
     );
     if(!userFound) {
-      return new NotFoundException(`user not found with id: ${validUserId}`);
+      return new NotFoundException(`user not found with id: ${userId}`);
     }
     return userFound;
   }
 
-  async setStatusUser(userId: string, value:boolean) {
+  async setStatusUser(userId: number, value:boolean) {
     const setValue = Boolean(value);
     const userDB = await this.userModel.findByPk(
       userId,

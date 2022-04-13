@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { ParseIntPipe } from 'src/common/parse-int.pipe';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
 
@@ -19,7 +20,7 @@ export class UsersController {
   }
 
   @Get('/:id')
-  findById(@Param('id') userId: string) {
+  findById(@Param('id', ParseIntPipe) userId: number) {
     return this.userService.findById(userId);
   }
 
@@ -30,7 +31,7 @@ export class UsersController {
 
   @Patch('/:id')
   changeStatus(
-    @Param('id') userId: string,
+    @Param('id', ParseIntPipe) userId: number,
     @Body('status') status: boolean
   ) {
     return this.userService.setStatusUser(userId, status);
@@ -38,10 +39,10 @@ export class UsersController {
 
   @Put('/:id')
   update(
-    @Param('id') userId: string,
+    @Param('id', ParseIntPipe) userId: number,
     @Body() payload: UpdateUserDto,
   ) {
-    return this.userService.update(+userId, payload);
+    return this.userService.update(userId, payload);
   }
 
 }
