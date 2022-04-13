@@ -4,13 +4,15 @@ import { environments } from 'environment';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import config from './config';
+
 import { DatabaseModule } from './database/database.module';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
+
 
 @Module({
   imports: [
     DatabaseModule,
-    UsersModule,
+    UserModule,
     ConfigModule.forRoot({
       envFilePath: environments[process.env.NODE_END] || '.env',
       load: [config],
