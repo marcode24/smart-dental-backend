@@ -1,3 +1,4 @@
+import { PartialType } from "@nestjs/mapped-types";
 import {
   IsBoolean,
   IsNotEmpty,
@@ -37,3 +38,5 @@ export class CreateServiceDto {
   readonly color: string;
 
 }
+
+export class UpdateServiceDto extends PartialType(CreateServiceDto) {}
