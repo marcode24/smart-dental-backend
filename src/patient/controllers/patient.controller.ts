@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -55,6 +55,15 @@ export class PatientController {
   @Post()
   create(@Body() payload: CreatePatientDto) {
     return this.patientService.create(payload);
+  }
+
+  @Roles(Role.ADMIN)
+  @Patch('/:idPatient/newUser/:idUser')
+  changeUser(
+    @Param('idPatient', ParseIntPipe) patientId: number,
+    @Param('idUser', ParseIntPipe) newUserId: number,
+  ) {
+    return this.patientService.changeUser(patientId, newUserId);
   }
 
 }

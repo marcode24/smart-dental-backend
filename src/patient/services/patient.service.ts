@@ -4,13 +4,13 @@ import { FindOptions, Op } from 'sequelize';
 
 import { CreatePatientDto } from '../dtos/patient.dto';
 
+import { Familiar } from '../entities/familiar.entity';
 import { Patient } from '../entities/patient.entity';
 import { User } from 'src/user/entities/user.entity';
 
 import { FamiliarService } from './familiar.service';
 
 import { ISearchParams } from '../models/search.model';
-import { Familiar } from '../entities/familiar.entity';
 
 @Injectable()
 export class PatientService {
@@ -29,6 +29,7 @@ export class PatientService {
 
   constructor(
     @InjectModel(Patient) private patientModel: typeof Patient,
+    @InjectModel(User) private userModel: typeof User,
     private familiarService: FamiliarService,
   ) {}
 
@@ -84,6 +85,28 @@ export class PatientService {
     }
     (isAdmin) ? delete this.optionsQuery.where['id_user'] : '';
     return this.optionsQuery;
+  }
+
+  async changeUser(patientId: number, newUserId: number) {
+    const userFound = await this.userModel.findByPk(
+      newUserId,
+      {
+        attributes: [ 'id_user' ]
+      }
+    );
+    if(!userFound) {
+      return new NotFoundException(`user not found with id: ${newUserId}`);
+    }
+    return await this.patientModel.update(
+      {
+        id_user: userFound.id_user,
+      },
+      {
+        where: {
+          id_patient: patientId
+        }
+      }
+    );
   }
 
 }
