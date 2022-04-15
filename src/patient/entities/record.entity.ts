@@ -29,7 +29,7 @@ export class Record extends Model {
   @AllowNull(false)
   @ForeignKey(() => Service)
   @Column(DataType.INTEGER)
-  id_service: Service;
+  id_service: number;
 
   @BelongsTo(() => Patient)
   user: Patient;
@@ -37,7 +37,7 @@ export class Record extends Model {
   @AllowNull(false)
   @ForeignKey(() => Patient)
   @Column(DataType.INTEGER)
-  id_patient: Patient;
+  id_patient: number;
 
   @AllowNull(false)
   @Column(DataType.STRING(255))
