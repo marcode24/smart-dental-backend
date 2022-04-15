@@ -39,7 +39,7 @@ export class ServicesController {
 
   @Roles(Role.ADMIN, Role.DENTIST)
   @Get('/:id')
-  findById(@Param('id', ParseIntPipe) serviceId: string) {
+  findById(@Param('id', ParseIntPipe) serviceId: number) {
     return this.serviceService.findById(serviceId);
   }
 

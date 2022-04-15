@@ -38,7 +38,7 @@ export class ServicesService {
     return await this.serviceModel.findAll(options);
   }
 
-  async findById(serviceId: string) {
+  async findById(serviceId: number) {
     const serviceFound = await this.serviceModel.findByPk(serviceId);
     if(!serviceFound) {
       return new NotFoundException(`service not found with id: ${serviceId}`);

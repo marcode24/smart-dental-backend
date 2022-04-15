@@ -9,15 +9,21 @@ import { FamiliarService } from './services/familiar.service';
 import { Patient } from './entities/patient.entity';
 import { Familiar } from './entities/familiar.entity';
 import { User } from 'src/user/entities/user.entity';
+import { Record } from './entities/record.entity';
+import { RecordController } from './controllers/record.controller';
+import { RecordService } from './services/record.service';
+import { ServiceModule } from 'src/service/service.module';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([ Patient, Familiar, User ]),
+    SequelizeModule.forFeature([ Patient, Familiar, User, Record ]),
+    ServiceModule
   ],
   providers: [
     PatientService,
     FamiliarService,
+    RecordService,
   ],
-  controllers: [PatientController]
+  controllers: [PatientController, RecordController]
 })
 export class PatientModule {}

@@ -7,6 +7,7 @@ import config from 'src/config';
 
 import { Familiar } from 'src/patient/entities/familiar.entity';
 import { Patient } from 'src/patient/entities/patient.entity';
+import { Record } from 'src/patient/entities/record.entity';
 import { Service } from 'src/service/entities/service.entity';
 import { User } from 'src/user/entities/user.entity';
 
@@ -43,7 +44,7 @@ import { User } from 'src/user/entities/user.entity';
           password,
           database: dbName
         });
-        sequelize.addModels([User, Service, Patient, Familiar])
+        sequelize.addModels([User, Service, Patient, Familiar, Record])
         await sequelize.sync();
         return sequelize;
       },
