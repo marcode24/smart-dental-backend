@@ -34,12 +34,13 @@ export class RecordController {
     return this.recordService.changeStatus(recordId, newStatus);
   }
 
-  // @Roles(Role.ADMIN, Role.DENTIST)
-  // @Get('/:patientId')
-  // findByPatient(
-  //   @Param('patientId', ParseIntPipe) patientId: number
-  // ) {
-  //   return this.recordService.findByPatient(patientId);
-  // }
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Get('/:patientId')
+  findByPatient(
+    @Param('patientId', ParseIntPipe) patientId: number,
+    @Query('filter', ParseIntPipe) filter: number,
+  ) {
+    return this.recordService.findByPatient(patientId, filter);
+  }
 
 }

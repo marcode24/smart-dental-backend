@@ -9,6 +9,8 @@ import { Record } from '../entities/record.entity';
 import { Service } from 'src/service/entities/service.entity';
 
 import { Status } from '../enums/status.enum';
+import { FindOptions } from 'sequelize';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class RecordService {
@@ -63,13 +65,14 @@ export class RecordService {
     return await recordDB.save();
   }
 
-  // async findByPatient(patientId: number) {
-  //   const optionsQuery: FindOptions = {
-  //     where: {
-  //       id_patient: patientId,
-  //     }
-  //   }
-  //   return await this.recordModel.findAll(optionsQuery);
-  // }
-
+  async findByPatient(patientId: number, filter: number) {
+    const status = (filter === 1) ? [Status.PENDING, Status.PENDING_PAYMENT] : [Status.CANCELLED, Status.COMPLETED];
+    const optionsQuery: FindOptions = {
+      where: {
+        id_patient: patientId,
+        status
+      }
+    }
+    return await this.recordModel.findAll(optionsQuery);
+  }
 }
