@@ -49,20 +49,28 @@ export class Record extends Model {
 
   @AllowNull(false)
   @Column(DataType.INTEGER)
-  price: number
+  price: number;
 
   @AllowNull(false)
-  @Default(false)
-  @Column(DataType.BOOLEAN)
-  completed: boolean;
+  @Column(DataType.STRING(50))
+  status: string;
 
-  @AllowNull(false)
-  @Default(false)
-  @Column(DataType.BOOLEAN)
-  paid: boolean;
+  @AllowNull(true)
+  @Default(null)
+  @Column(DataType.DATE)
+  completed_date: Date;
 
   @Default(null)
   @Column(DataType.DATE)
   payment_date: Date;
+
+  @AllowNull(false)
+  @Column(DataType.DATE)
+  realization_date: Date;
+
+  @AllowNull(true)
+  @Default(null)
+  @Column(DataType.DATE)
+  cancel_date: Date;
 
 }

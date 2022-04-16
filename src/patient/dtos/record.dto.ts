@@ -1,10 +1,8 @@
 import {
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsPositive,
-  IsString,
-  MaxLength,
-  MinLength
 } from "class-validator";
 
 export class CreateRecordDto {
@@ -23,5 +21,9 @@ export class CreateRecordDto {
   @IsNumber()
   @IsPositive()
   quantity: number;
+
+  @IsNotEmpty()
+  @IsDateString()
+  realization_date: Date;
 
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -23,6 +23,15 @@ export class RecordController {
   @Post()
   create(@Body() payload: CreateRecordDto) {
     return this.recordService.create(payload);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Patch('/:recordId')
+  changeStatus(
+    @Param('recordId', ParseIntPipe) recordId: number,
+    @Query('status') newStatus: string
+  ) {
+    return this.recordService.changeStatus(recordId, newStatus);
   }
 
   // @Roles(Role.ADMIN, Role.DENTIST)

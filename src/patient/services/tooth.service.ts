@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { FindOptions } from 'sequelize';
 
 import { CreateRecordDto } from '../dtos/record.dto';
 import { CreateToothDto } from '../dtos/tooth.dto';
+import { Record } from '../entities/record.entity';
 
 import { Tooth } from '../entities/tooth.entity';
 
@@ -17,11 +19,23 @@ export class ToothService {
   ) {}
 
   async create(data: CreateToothDto) {
-    const createRecord: CreateRecordDto = { ...data, quantity: 1 };
+    const createRecord: CreateRecordDto = { ...data, quantity: 1, realization_date: new Date() };
     const recordCreated = await this.recordService.create(createRecord);
     const newTooth = new this.toothModel(data);
     newTooth.id_record = recordCreated.id_record;
     return await newTooth.save();
+  }
+
+  async findByPatient(patientId: number) {
+    const optionsQuery: FindOptions = {
+      where: {
+        id_patient: patientId,
+      },
+      include: [
+        { model: Record }
+      ]
+    }
+    return await this.toothModel.findAll(optionsQuery);
   }
 
 }
