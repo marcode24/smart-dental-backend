@@ -10,7 +10,6 @@ import { Service } from 'src/service/entities/service.entity';
 
 import { Status } from '../enums/status.enum';
 import { FindOptions } from 'sequelize';
-import { Op } from 'sequelize';
 
 @Injectable()
 export class RecordService {

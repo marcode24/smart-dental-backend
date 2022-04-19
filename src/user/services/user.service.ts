@@ -85,7 +85,10 @@ export class UserService {
 
   async findByUsername(username: string) {
     const user = await this.userModel.findOne({ where: { username } });
-    return user.toJSON();
+    if(!user) {
+      return new NotFoundException('user not found');
+    }
+    return user.get({ plain:true });
   }
 
 }
