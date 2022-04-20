@@ -14,13 +14,13 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(2)
   @MaxLength(20)
   readonly name: string;
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(2)
   @MaxLength(20)
   readonly last_name: string;
 
@@ -50,12 +50,12 @@ export class CreateUserDto {
   readonly cp: number;
 
   @IsNotEmpty()
-  @MinLength(4)
+  @MinLength(2)
   @MaxLength(50)
   readonly city: string;
 
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(2)
   @MaxLength(50)
   readonly country: string;
 
@@ -74,8 +74,10 @@ export class CreateUserDto {
   readonly password: string;
 
   readonly status: boolean;
+
+  @IsNotEmpty()
   readonly image: string;
-  readonly code: string;
+  code: string;
 
 }
 

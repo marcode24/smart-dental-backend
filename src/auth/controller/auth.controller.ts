@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
 import { AuthService } from '../services/auth.service';
@@ -13,18 +13,31 @@ import { Public } from '../decorators/public.decorator';
 import { Roles } from '../decorators/roles.decorator';
 
 import { Role } from '../enums/roles.enum';
+import { UserService } from 'src/user/services/user.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('auth')
 export class AuthController {
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @Public()
   @UseGuards(AuthGuard('local'))
   @Post('login')
   login(@Req() req: Request) {
     return this.authService.generateJWT(req.user as User);
+  }
+
+  @Public()
+  @Get('code/:code')
+  async validateCode(
+    @Param('code') code: string
+  ) {
+    const isValid = await this.userService.validateCode(code);
+    return { valid: isValid };
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)

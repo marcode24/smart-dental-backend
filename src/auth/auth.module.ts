@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -16,7 +16,7 @@ import config from 'src/config';
 
 @Module({
   imports: [
-    UserModule,
+    forwardRef(() => UserModule),
     PassportModule,
     JwtModule.registerAsync({
       inject: [config.KEY],
@@ -37,6 +37,9 @@ import config from 'src/config';
     AuthService,
     LocalStrategy,
     JwtStrategy
+  ],
+  exports: [
+    AuthService
   ]
 })
 export class AuthModule {}

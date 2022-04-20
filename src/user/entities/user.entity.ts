@@ -86,6 +86,7 @@ export class User extends Model {
   @Column(DataType.BOOLEAN)
   status: boolean;
 
+  @AllowNull(false)
   @Column(DataType.STRING(120))
   image: string;
 
