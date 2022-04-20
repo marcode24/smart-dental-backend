@@ -1,18 +1,36 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
-import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { FindOptions, Op, where } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
+
+import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
+
+import { User } from '../entities/user.entity';
+
+import { Role } from 'src/auth/enums/roles.enum';
+import { AuthService } from 'src/auth/services/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User) private userModel: typeof User,
+    @Inject(forwardRef(() => AuthService))
+    private authService: AuthService
   ) {}
 
+  private generateCode(): string {
+    const head = Date.now().toString(36).substring(3);
+    const tail = Math.random().toString(36).substring(9);
+    return head + tail;
+  }
+
   async create(data: CreateUserDto) {
+    const { role } = data;
+    if(role === Role.ADMIN) {
+      data.code = this.generateCode();
+    }
     const newModel = new this.userModel(data);
+    console.log(newModel);
     const { username } = newModel;
     if(await this.validateUserUnique(username)) {
       return new BadRequestException('username already in use');
@@ -21,11 +39,24 @@ export class UserService {
     newModel.password = hashPassword;
     const modelSaved = await newModel.save();
     const { password, ...response } = modelSaved.toJSON();
-    return response;
+    return this.authService.generateJWT(modelSaved);
+  }
+
+  async validateCode(code: string) {
+    const userFound = await this.userModel.findOne(
+      {
+        where: { code },
+        attributes: ['code', 'role']
+      }
+    );
+    if(!userFound) {
+      return false;
+    }
+    return userFound.get({ plain: true }).role === Role.ADMIN
   }
 
   async validateUserUnique(username: string) {
-    const usersFound = await this.userModel.findOne({ where: { username } });
+    const usersFound = await this.userModel.findOne({ where: { username }});
     return usersFound ? true : false ;
   }
 
@@ -53,24 +84,20 @@ export class UserService {
     return await this.userModel.findAll(options);
   }
 
-  async findById(userId: string) {
-    const validUserId = Number(userId);
-    if(!validUserId) {
-      return new BadRequestException('must provide a valid id');
-    }
+  async findById(userId: number) {
     const userFound = await this.userModel.findByPk(
-      validUserId,
+      userId,
       {
         attributes: { exclude: ['password'] }
       }
     );
     if(!userFound) {
-      return new NotFoundException(`user not found with id: ${validUserId}`);
+      return new NotFoundException(`user not found with id: ${userId}`);
     }
     return userFound;
   }
 
-  async setStatusUser(userId: string, value:boolean) {
+  async setStatusUser(userId: number, value:boolean) {
     const setValue = Boolean(value);
     const userDB = await this.userModel.findByPk(
       userId,
@@ -89,7 +116,10 @@ export class UserService {
 
   async findByUsername(username: string) {
     const user = await this.userModel.findOne({ where: { username } });
-    return user.toJSON();
+    if(!user) {
+      return new NotFoundException('user not found');
+    }
+    return user.get({ plain:true });
   }
 
 }

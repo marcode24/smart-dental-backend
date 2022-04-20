@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { ServiceModule } from './service/service.module';
+import { PatientModule } from './patient/patient.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ServiceModule } from './service/service.module';
     }),
     DatabaseModule,
     AuthModule,
+    PatientModule,
     UserModule,
     ServiceModule,
   ],

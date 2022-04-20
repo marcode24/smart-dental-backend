@@ -5,8 +5,12 @@ import { Sequelize } from "sequelize-typescript";
 
 import config from 'src/config';
 
-import { User } from 'src/user/entities/user.entity';
+import { Familiar } from 'src/patient/entities/familiar.entity';
+import { Patient } from 'src/patient/entities/patient.entity';
+import { Record } from 'src/patient/entities/record.entity';
 import { Service } from 'src/service/entities/service.entity';
+import { Tooth } from 'src/patient/entities/tooth.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Module({
   imports: [
@@ -41,7 +45,14 @@ import { Service } from 'src/service/entities/service.entity';
           password,
           database: dbName
         });
-        sequelize.addModels([User, Service])
+        sequelize.addModels([
+          User,
+          Service,
+          Patient,
+          Familiar,
+          Record,
+          Tooth
+        ]);
         await sequelize.sync();
         return sequelize;
       },

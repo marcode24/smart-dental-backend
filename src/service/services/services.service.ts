@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions, Op } from 'sequelize';
-import { CreateServiceDto } from '../dtos/service.dto';
+import { CreateServiceDto, UpdateServiceDto } from '../dtos/service.dto';
 import { Service } from '../entities/service.entity';
 
 @Injectable()
@@ -38,12 +38,29 @@ export class ServicesService {
     return await this.serviceModel.findAll(options);
   }
 
-  async findById(serviceId: string) {
+  async findById(serviceId: number) {
     const serviceFound = await this.serviceModel.findByPk(serviceId);
     if(!serviceFound) {
       return new NotFoundException(`service not found with id: ${serviceId}`);
     }
     return serviceFound;
+  }
+
+  async changeStatus(serviceId: number, newValue: boolean) {
+    const serviceDB = await this.serviceModel.findByPk(serviceId);
+    if(!serviceDB) {
+      return new NotFoundException(`service not found with id: ${serviceId}`);
+    }
+    serviceDB.status = Boolean(newValue);
+    return await serviceDB.save();
+  }
+
+  async update(serviceId: number, changes: UpdateServiceDto) {
+    return await this.serviceModel.update(changes, {
+      where: {
+        id_service: serviceId,
+      }
+    })
   }
 
 }

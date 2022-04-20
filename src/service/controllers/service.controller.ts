@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
@@ -9,7 +9,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
-import { CreateServiceDto } from '../dtos/service.dto';
+import { CreateServiceDto, UpdateServiceDto } from '../dtos/service.dto';
 
 import { ServicesService } from '../services/services.service';
 
@@ -39,9 +39,26 @@ export class ServicesController {
 
   @Roles(Role.ADMIN, Role.DENTIST)
   @Get('/:id')
-  findById(@Param('id', ParseIntPipe) serviceId: string) {
+  findById(@Param('id', ParseIntPipe) serviceId: number) {
     return this.serviceService.findById(serviceId);
   }
 
+  @Roles(Role.ADMIN)
+  @Patch('/:id')
+  changeStatus(
+    @Param('id', ParseIntPipe) serviceId: number,
+    @Body('status') status: boolean
+  ) {
+    return this.serviceService.changeStatus(serviceId, status);
+  }
+
+  @Roles(Role.ADMIN)
+  @Put('/:id')
+  update(
+    @Param('id', ParseIntPipe) serviceId: number,
+    @Body() payload: UpdateServiceDto,
+  ) {
+    return this.serviceService.update(serviceId, payload);
+  }
 
 }

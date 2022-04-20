@@ -1,26 +1,30 @@
+import { Type } from "class-transformer";
 import {
+  IsDateString,
+  IsDefined,
   IsEmail,
   IsNotEmpty,
   IsNumber,
   IsString,
   MaxLength,
   MinLength,
-  IsDateString
+  Validate,
+  ValidateIf,
+  ValidateNested
 } from "class-validator";
+import { CreateFamiliarDto } from "./familiar.dto";
 
-import { PartialType } from '@nestjs/mapped-types';
-
-export class CreateUserDto {
+export class CreatePatientDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(2)
+  @MinLength(5)
   @MaxLength(20)
   readonly name: string;
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(2)
+  @MinLength(5)
   @MaxLength(20)
   readonly last_name: string;
 
@@ -50,35 +54,35 @@ export class CreateUserDto {
   readonly cp: number;
 
   @IsNotEmpty()
-  @MinLength(2)
+  @MinLength(4)
   @MaxLength(50)
   readonly city: string;
 
   @IsNotEmpty()
-  @MinLength(2)
+  @MinLength(5)
   @MaxLength(50)
   readonly country: string;
 
   @IsNotEmpty()
-  @MaxLength(10)
-  @MinLength(4)
-  readonly role: string;
+  @IsString()
+  readonly number_home: string;
 
-  @IsNotEmpty()
-  @MaxLength(24)
-  @MinLength(5)
-  readonly username: string;
-
-  @IsNotEmpty()
-  @MinLength(5)
-  readonly password: string;
-
+  @ValidateIf((_, value) => value !== null)
   readonly status: boolean;
 
-  @IsNotEmpty()
+  @ValidateIf((_, value) => value !== null)
   readonly image: string;
-  code: string;
+
+  @ValidateIf((_, value) => value !== null)
+  id_familiar: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  readonly id_user: number;
+
+  @IsDefined()
+  @ValidateNested({ each: true })
+  @Type(() => CreateFamiliarDto)
+  readonly familiar: CreateFamiliarDto;
 
 }
-
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
