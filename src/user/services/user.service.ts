@@ -8,6 +8,7 @@ import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { User } from '../entities/user.entity';
 
 import { Role } from 'src/auth/enums/roles.enum';
+
 import { AuthService } from 'src/auth/services/auth.service';
 
 @Injectable()
@@ -81,7 +82,13 @@ export class UserService {
         },
       };
     }
-    return await this.userModel.findAll(options);
+    const [ users, totalAdmin, totalUser ] = await Promise.all([
+      this.userModel.findAll(options),
+      this.userModel.count({ where: { role: Role.ADMIN } }),
+      this.userModel.count({ where: { role: Role.DENTIST } }),
+    ]);
+    const data = { users, totalAdmin, totalUser };
+    return data;
   }
 
   async findById(userId: number) {

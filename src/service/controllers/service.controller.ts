@@ -30,11 +30,11 @@ export class ServicesController {
   @Roles(Role.ADMIN, Role.DENTIST)
   @Get()
   findAll(
-    @Query('name') name: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string
+    @Query('name') name?: string,
+    @Query('limit', ParseIntPipe) limit?: number,
+    @Query('offset', ParseIntPipe) offset?: number
   ) {
-    return this.serviceService.findAll(name, +limit, +offset);
+    return this.serviceService.findAll(name, limit, offset);
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)

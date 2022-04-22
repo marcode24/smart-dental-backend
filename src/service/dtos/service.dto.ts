@@ -26,6 +26,8 @@ export class CreateServiceDto {
   @IsPositive()
   readonly price: number;
 
+  @IsNotEmpty()
+  @IsBoolean()
   readonly status: boolean;
 
   @IsBoolean()
@@ -35,6 +37,7 @@ export class CreateServiceDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
+  @ValidateIf((_, value) => value !== null)
   readonly color: string;
 
 }
