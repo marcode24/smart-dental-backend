@@ -90,6 +90,6 @@ export class User extends Model {
   @Column(DataType.STRING(120))
   image: string;
 
-  @Column(DataType.STRING(8))
+  @Column(DataType.STRING(10))
   code: string;
 }

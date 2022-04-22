@@ -41,7 +41,7 @@ export class Service extends Model {
   @Column(DataType.BOOLEAN)
   odontogram: boolean;
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.STRING(7))
   color: string;
 

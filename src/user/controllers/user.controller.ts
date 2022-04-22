@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
@@ -29,6 +29,7 @@ export class UsersController {
     return this.userService.create(payload);
   }
 
+  @HttpCode(201)
   @Patch('/:id')
   changeStatus(
     @Param('id', ParseIntPipe) userId: number,

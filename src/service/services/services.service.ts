@@ -24,18 +24,25 @@ export class ServicesService {
   async findAll(name: string, limit: number = 5, offset: number = 0, ) {
     const newLimit = limit || 5;
     const newOffset = offset || 0;
-    let options: FindOptions = {};
+    let options: FindOptions = {
+      limit: newLimit,
+      offset: newOffset,
+    };
     if(name) {
       const search = `%${name.toString()}%`
       options = {
-        limit: newLimit,
-        offset: newOffset,
         where: {
           name: { [Op.like]: search },
         },
       };
     }
-    return await this.serviceModel.findAll(options);
+    const [ services, totalActive, totalInactive ] = await Promise.all([
+      this.serviceModel.findAll(options),
+      this.serviceModel.count({ where: { status: true } }),
+      this.serviceModel.count({ where: { status: false } }),
+    ]);
+    const data = { services, totalActive, totalInactive };
+    return data;
   }
 
   async findById(serviceId: number) {
