@@ -40,11 +40,6 @@ export class PatientService {
     return patientCreated;
   }
 
-  async findAll(params: ISearchParams) {
-    const optionsQuery = this.getOptionsQuery(params, true);
-    return await this.patientModel.findAndCountAll(optionsQuery);
-  }
-
   async findById(patientId: number) {
     const patientDb = await this.patientModel.findByPk(patientId, this.optionsQuery);
     if(!patientDb) {
@@ -53,9 +48,30 @@ export class PatientService {
     return patientDb;
   }
 
+  async findAll(params: ISearchParams) {
+    const optionsQuery = this.getOptionsQuery(params, true);
+    return this.findPatients(optionsQuery);
+  }
+
   async findByUser(userId: number, params: ISearchParams) {
     const optionsQuery = this.getOptionsQuery(params, false, userId);
-    return await this.patientModel.findAndCountAll(optionsQuery);
+    return this.findPatients(optionsQuery, userId);
+  }
+
+  private async findPatients(optionsQuery: FindOptions, id_user?: number) {
+    let optionQueryActive: FindOptions = { where: { status: true } };
+    let optionQueryInactive: FindOptions = { where: { status: false } };
+    if(id_user) {
+      optionQueryActive = { where: { id_user, status: true } };
+      optionQueryInactive = { where: { id_user, status: false } };
+    }
+    const [ patients, totalActive, totalInactive ] = await Promise.all([
+      this.patientModel.findAll(optionsQuery),
+      this.patientModel.count(optionQueryActive),
+      this.patientModel.count(optionQueryInactive),
+    ])
+    const data = { patients, totalActive, totalInactive };
+    return data;
   }
 
   private getOptionsQuery(params: ISearchParams, isAdmin: boolean, userId?: number): FindOptions<any> {
