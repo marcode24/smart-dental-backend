@@ -63,10 +63,6 @@ export class CreatePatientDto {
   @MaxLength(50)
   readonly country: string;
 
-  @IsNotEmpty()
-  @IsString()
-  readonly number_home: string;
-
   @ValidateIf((_, value) => value !== null)
   readonly status: boolean;
 

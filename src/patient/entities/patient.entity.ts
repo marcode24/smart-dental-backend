@@ -81,11 +81,6 @@ export class Patient extends Model {
   @Column(DataType.STRING(20))
   country: string;
 
-  @IsNumeric
-  @AllowNull(false)
-  @Column(DataType.STRING(10))
-  number_home: string;
-
   @AllowNull(false)
   @Default(true)
   @Column(DataType.BOOLEAN)

@@ -32,7 +32,7 @@ export class ServicesController {
   findAll(
     @Query('name') name?: string,
     @Query('limit', ParseIntPipe) limit?: number,
-    @Query('offset', ParseIntPipe) offset?: number
+    @Query('offset', ParseIntPipe) offset?: number,
   ) {
     return this.serviceService.findAll(name, limit, offset);
   }

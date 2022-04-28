@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions, Op } from 'sequelize';
 
@@ -46,6 +46,19 @@ export class PatientService {
       return new NotFoundException(`patient not found with id ${patientId}`);
     }
     return patientDb;
+  }
+
+  async findbyUserAndPatient(userID: number, patientID: number) {
+    const patientFound = await this.patientModel.findOne({
+      where: {
+        id_patient: patientID,
+        id_user: userID,
+      }
+    });
+    if(!patientFound) {
+      return new BadRequestException('You do not have access for this patient');
+    }
+    return { patient: patientFound }
   }
 
   async findAll(params: ISearchParams) {

@@ -21,7 +21,7 @@ export class ServicesService {
     return serviceCreated;
   }
 
-  async findAll(name: string, limit: number = 5, offset: number = 0, ) {
+  async findAll(name: string, limit: number = 5, offset: number = 0) {
     const newLimit = limit || 5;
     const newOffset = offset || 0;
     let options: FindOptions = {

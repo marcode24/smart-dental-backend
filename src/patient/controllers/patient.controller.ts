@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, Response, UseGuards } from '@nestjs/common';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -35,8 +35,17 @@ export class PatientController {
   @Get('patient/:patientId')
   findById(
     @Param('patientId', ParseIntPipe) patientId: number,
+    ) {
+      return this.patientService.findById(patientId);
+    }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Get('patient/:patientId/user/:userId')
+  findByUserAndPatient(
+    @Param('patientId', ParseIntPipe) patientId: number,
+    @Param('userId', ParseIntPipe) userId: number,
   ) {
-    return this.patientService.findById(patientId);
+    return this.patientService.findbyUserAndPatient(userId, patientId);
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)
