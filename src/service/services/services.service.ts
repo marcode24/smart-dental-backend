@@ -45,6 +45,16 @@ export class ServicesService {
     return data;
   }
 
+  async findByFilter(odontogram: boolean = false) {
+    const servicesFound = await this.serviceModel.findAll({
+      where: {
+        odontogram,
+        status: true
+      }
+    });
+    return { services: servicesFound };
+  }
+
   async findById(serviceId: number) {
     const serviceFound = await this.serviceModel.findByPk(serviceId);
     if(!serviceFound) {

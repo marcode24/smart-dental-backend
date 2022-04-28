@@ -38,6 +38,15 @@ export class ServicesController {
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)
+  @Get('/all')
+  findByFilter(
+    @Query('odontogram') odontogram: string,
+  ) {
+    const value = JSON.parse(odontogram);
+    return this.serviceService.findByFilter(value);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
   @Get('/:id')
   findById(@Param('id', ParseIntPipe) serviceId: number) {
     return this.serviceService.findById(serviceId);
