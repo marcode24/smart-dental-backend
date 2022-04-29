@@ -19,7 +19,7 @@ export class Tooth extends Model {
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
-  id_tooh: number;
+  id_tooth: number;
 
   @BelongsTo(() => Record)
   record: Record;

@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions } from 'sequelize';
 
+import { Status } from '../enums/status.enum';
+
 import { CreateRecordDto } from '../dtos/record.dto';
 import { CreateToothDto } from '../dtos/tooth.dto';
-import { Record } from '../entities/record.entity';
 
+import { Service } from 'src/service/entities/service.entity';
+import { Record } from '../entities/record.entity';
 import { Tooth } from '../entities/tooth.entity';
 
 import { RecordService } from './record.service';
@@ -32,7 +35,17 @@ export class ToothService {
         id_patient: patientId,
       },
       include: [
-        { model: Record }
+        {
+          model: Record,
+          where: {
+            status: Status.PENDING,
+          },
+          include: [
+            {
+              model: Service
+            }
+          ]
+        }
       ]
     }
     return await this.toothModel.findAll(optionsQuery);

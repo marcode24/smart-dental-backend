@@ -24,7 +24,7 @@ export class ToothController {
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)
-  @Get('/:patientId')
+  @Get('/patient/:patientId')
   findByPatient(
     @Param('patientId', ParseIntPipe) patientId: number,
   ) {
