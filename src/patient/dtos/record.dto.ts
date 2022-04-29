@@ -1,3 +1,4 @@
+import { PartialType } from "@nestjs/mapped-types";
 import {
   IsDateString,
   IsNotEmpty,
@@ -27,3 +28,5 @@ export class CreateRecordDto {
   realization_date: Date;
 
 }
+
+export class UpdateRecordDto extends PartialType(CreateRecordDto) {}

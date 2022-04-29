@@ -1,15 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { FindOptions } from 'sequelize';
 
 import { ServicesService } from 'src/service/services/services.service';
 
-import { CreateRecordDto } from '../dtos/record.dto';
+import { CreateRecordDto, UpdateRecordDto } from '../dtos/record.dto';
 
 import { Record } from '../entities/record.entity';
 import { Service } from 'src/service/entities/service.entity';
 
 import { Status } from '../enums/status.enum';
-import { FindOptions } from 'sequelize';
 
 @Injectable()
 export class RecordService {
@@ -74,4 +74,25 @@ export class RecordService {
     }
     return await this.recordModel.findAll(optionsQuery);
   }
+
+  async update(idRecord: number, data: UpdateRecordDto) {
+    const { id_service, quantity } = data;
+    const recordFound = await this.recordModel.findByPk(idRecord);
+    if(!recordFound) {
+      return new NotFoundException(`record not found with id: ${idRecord}`);
+    }
+    if(recordFound.status !== Status.PENDING) {
+      return new BadRequestException('You can not update record, because it status is not pending');
+    }
+    const serviceDB = await this.servicesService.findById(id_service) as Service;
+    if(serviceDB.id_service) {
+      recordFound.id_service = serviceDB.id_service;
+      recordFound.service_name = serviceDB.name;
+      recordFound.quantity = quantity;
+      recordFound.price = serviceDB.price * quantity;
+      return await recordFound.save();
+    }
+    return 0;
+  }
+
 }
