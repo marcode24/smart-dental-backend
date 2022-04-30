@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions } from 'sequelize';
 
-import { CreateAppointmentDto } from '../dtos/appointment.dto';
+import { ChangeStatusAppointmentDto, CreateAppointmentDto } from '../dtos/appointment.dto';
 
 import { AppointmentDetail } from '../entities/appointment-detail.entity';
 import { Appointment } from '../entities/appointment.entity';
@@ -48,6 +48,16 @@ export class AppointmentService {
       include: [ Record ]
     }
     return this.appointmentModel.findAll(optionsQuery);
+  }
+
+  async changeStatus(id_appointment: number, data: ChangeStatusAppointmentDto) {
+    const appointmentFound = await this.appointmentModel.findByPk(id_appointment);
+    if(!appointmentFound) {
+      return new NotFoundException(`appointment not found with id ${id_appointment}`);
+    }
+    appointmentFound.status = data.status;
+    console.log(appointmentFound);
+    return await appointmentFound.save();
   }
 
 }
