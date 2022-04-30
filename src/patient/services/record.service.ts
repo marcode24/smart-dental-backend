@@ -20,12 +20,11 @@ export class RecordService {
   ) {}
 
   async create(data: CreateRecordDto) {
-    const { id_service, quantity, realization_date } = data;
+    const { id_service, quantity } = data;
     let newRecord = new this.recordModel(data);
     const serviceDB = await this.servicesService.findById(id_service) as Service;
     newRecord.service_name = serviceDB.name;
     newRecord.price = serviceDB.price * quantity;
-    newRecord.realization_date = realization_date;
     newRecord.status = Status.PENDING;
     return await newRecord.save();
   }
@@ -56,7 +55,7 @@ export class RecordService {
           return new BadRequestException('must be pending to change status');
         }
         recordDB.status = Status.PENDING_PAYMENT;
-        recordDB.completed_date = new Date();
+        recordDB.realization_date = new Date();
         break;
       default:
         return new BadRequestException('must provide a valid status option');

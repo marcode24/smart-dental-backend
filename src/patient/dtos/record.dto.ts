@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsPositive,
+  ValidateIf,
 } from "class-validator";
 
 export class CreateRecordDto {
@@ -23,8 +24,7 @@ export class CreateRecordDto {
   @IsPositive()
   quantity: number;
 
-  @IsNotEmpty()
-  @IsDateString()
+  @ValidateIf((_, value) => value !== null)
   realization_date: Date;
 
 }

@@ -12,6 +12,7 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { ServiceModule } from './service/service.module';
 import { PatientModule } from './patient/patient.module';
+import { AppointmentModule } from './appointment/appointment.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PatientModule } from './patient/patient.module';
     PatientModule,
     UserModule,
     ServiceModule,
+    AppointmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
