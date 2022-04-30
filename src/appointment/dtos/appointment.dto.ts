@@ -26,5 +26,5 @@ export class CreateAppointmentDto {
   @ValidateIf((_, value) => value !== null)
   readonly description: string;
 
-  readonly status: boolean;
+  readonly status: string;
 }

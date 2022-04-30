@@ -1,11 +1,13 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
 import { CreateAppointmentDto } from '../dtos/appointment.dto';
+import { StatusAppointment } from '../enums/status-appointment.enum';
 
 import { AppointmentService } from '../services/appointment.service';
 
@@ -19,6 +21,24 @@ export class AppointmentController {
   @Post('')
   create(@Body() payload: CreateAppointmentDto) {
     return this.appointmentService.create(payload);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Get('/patient/:patientID')
+  findByPatient(
+    @Param('patientID', ParseIntPipe) patientID: number,
+    @Query('status') status: StatusAppointment
+  ) {
+    return this.appointmentService.findByPatient(patientID, status)
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Get('/user/:userID')
+  findByUser(
+    @Param('userID', ParseIntPipe) userID: number,
+    @Query('status') status: StatusAppointment
+  ) {
+    return this.appointmentService.findByUser(userID, status);
   }
 
 }

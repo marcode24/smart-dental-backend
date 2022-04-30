@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { FindOptions } from 'sequelize';
 
 import { CreateAppointmentDto } from '../dtos/appointment.dto';
 
 import { AppointmentDetail } from '../entities/appointment-detail.entity';
 import { Appointment } from '../entities/appointment.entity';
+import { Record } from 'src/patient/entities/record.entity';
+import { StatusAppointment } from '../enums/status-appointment.enum';
 
 @Injectable()
 export class AppointmentService {
@@ -21,6 +24,30 @@ export class AppointmentService {
       await this.appointmentDetailModel.create({ id_appointment, id_record: id_record })
     })
     return true;
+  }
+
+  async findByPatient(patientId: number, status: StatusAppointment) {
+    status = status || StatusAppointment.PENDING;
+    const optionsQuery: FindOptions = {
+      where: {
+        status,
+        id_patient: patientId,
+      },
+      include: [ Record ]
+    }
+    return this.appointmentModel.findAll(optionsQuery);
+  }
+
+  async findByUser(id_user: number, status: StatusAppointment) {
+    status = status || StatusAppointment.PENDING;
+    const optionsQuery: FindOptions = {
+      where: {
+        status,
+        id_user,
+      },
+      include: [ Record ]
+    }
+    return this.appointmentModel.findAll(optionsQuery);
   }
 
 }

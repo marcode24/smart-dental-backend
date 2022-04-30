@@ -14,6 +14,7 @@ import {
 import { Patient } from "src/patient/entities/patient.entity";
 import { Record } from "src/patient/entities/record.entity";
 import { User } from "src/user/entities/user.entity";
+import { StatusAppointment } from "../enums/status-appointment.enum";
 import { AppointmentDetail } from "./appointment-detail.entity";
 
 @Table({ timestamps: true, tableName: 'appointment', initialAutoIncrement: '1000' })
@@ -47,9 +48,9 @@ export class Appointment extends Model {
   @Column(DataType.STRING(1024))
   description: string;
 
-  @Default(true)
-  @Column(DataType.BOOLEAN)
-  status: boolean;
+  @Default(StatusAppointment.PENDING)
+  @Column(DataType.STRING(20))
+  status: string;
 
   @BelongsToMany(() => Record, () => AppointmentDetail )
   records: Array<Record & { AppoinmentDetail: AppointmentDetail }>;
