@@ -64,7 +64,7 @@ export class RecordService {
   }
 
   async findByPatient(patientId: number, filter: number) {
-    const status = (filter === 1) ? [Status.PENDING, Status.PENDING_PAYMENT] : [Status.CANCELLED, Status.COMPLETED];
+    const status = (filter === 1) ? [Status.PENDING, Status.PENDING_PAYMENT] : (filter === 2) ? [Status.CANCELLED, Status.COMPLETED] : [Status.PENDING];
     const optionsQuery: FindOptions = {
       where: {
         id_patient: patientId,

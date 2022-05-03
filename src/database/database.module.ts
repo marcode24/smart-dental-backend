@@ -29,6 +29,7 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
           username,
           synchronize: false,
           autoLoadModels: true,
+          timezone: '+00:00'
         };
       },
     }),
@@ -45,7 +46,8 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
           port,
           username,
           password,
-          database: dbName
+          database: dbName,
+          timezone: '+00:00'
         });
         sequelize.addModels([
           User,

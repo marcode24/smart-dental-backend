@@ -36,9 +36,10 @@ export class AppointmentController {
   @Get('/user/:userID')
   findByUser(
     @Param('userID', ParseIntPipe) userID: number,
-    @Query('status') status: StatusAppointment
+    @Query('status') status: StatusAppointment,
+    @Query('date') date: Date,
   ) {
-    return this.appointmentService.findByUser(userID, status);
+    return this.appointmentService.findByUser(userID, status, date);
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)

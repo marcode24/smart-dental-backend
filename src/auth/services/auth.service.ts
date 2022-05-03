@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/entities/user.entity';
@@ -17,6 +17,9 @@ export class AuthService {
 
   async validateUser(username: string, password: string) {
     const user = await this.userService.findByUsername(username);
+    if(!user.status) {
+      return { user: null, msg: 'user disabled' };
+    }
     if(user.password) {
       const isMatch = await bcrypt.compare(password, user.password);
       if(isMatch) {
@@ -24,17 +27,16 @@ export class AuthService {
         return response;
       }
     }
-    return null;
+    return { user: null, msg: 'user not found'};
   }
 
   async renewToken(userId: number) {
-    const user = await this.userService.findById(userId);
-    if(user) {
-      return this.generateJWT(user as User);
+    const user = await this.userService.findById(userId) as User;
+    if(!user.status) {
+      return new ForbiddenException('User disabled');
     }
+    return this.generateJWT(user as User);
   }
-
-
 
   async generateJWT(user: User) {
     const { role, id_user } = user;

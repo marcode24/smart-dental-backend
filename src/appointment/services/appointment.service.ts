@@ -8,6 +8,8 @@ import { AppointmentDetail } from '../entities/appointment-detail.entity';
 import { Appointment } from '../entities/appointment.entity';
 import { Record } from 'src/patient/entities/record.entity';
 import { StatusAppointment } from '../enums/status-appointment.enum';
+import { Patient } from 'src/patient/entities/patient.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class AppointmentService {
@@ -33,20 +35,33 @@ export class AppointmentService {
         status,
         id_patient: patientId,
       },
-      include: [ Record ]
+      include: [ Record, Patient ]
     }
     return this.appointmentModel.findAll(optionsQuery);
   }
 
-  async findByUser(id_user: number, status: StatusAppointment) {
+  async findByUser(id_user: number, status: StatusAppointment, date: Date) {
     status = status || StatusAppointment.PENDING;
-    const optionsQuery: FindOptions = {
+    let optionsQuery: FindOptions = {
       where: {
         status,
         id_user,
       },
-      include: [ Record ]
+      include: [ Record, Patient ]
     }
+    if(date) {
+      const initDate = date.setHours(0, 0, 0)
+      const finalDate = date.setHours(23, 59, 59);
+      console.log({finalDate});
+      optionsQuery.where = {
+        ...optionsQuery.where,
+        date: {
+          [Op.gte]: initDate,
+          [Op.lte]: finalDate
+        }
+      }
+    }
+    console.log(optionsQuery);
     return this.appointmentModel.findAll(optionsQuery);
   }
 
