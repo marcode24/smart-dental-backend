@@ -32,9 +32,18 @@ export class ServicesController {
   findAll(
     @Query('name') name?: string,
     @Query('limit', ParseIntPipe) limit?: number,
-    @Query('offset', ParseIntPipe) offset?: number
+    @Query('offset', ParseIntPipe) offset?: number,
   ) {
     return this.serviceService.findAll(name, limit, offset);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Get('/all')
+  findByFilter(
+    @Query('odontogram') odontogram: string,
+  ) {
+    const value = JSON.parse(odontogram);
+    return this.serviceService.findByFilter(value);
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)

@@ -7,7 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
-import { CreateRecordDto } from '../dtos/record.dto';
+import { CreateRecordDto, UpdateRecordDto } from '../dtos/record.dto';
 
 import { RecordService } from '../services/record.service';
 
@@ -41,6 +41,15 @@ export class RecordController {
     @Query('filter', ParseIntPipe) filter: number,
   ) {
     return this.recordService.findByPatient(patientId, filter);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Patch('/update/:recordId')
+  updateRecord(
+    @Param('recordId', ParseIntPipe) recordId: number,
+    @Body() payload: UpdateRecordDto,
+  ) {
+    return this.recordService.update(recordId, payload);
   }
 
 }

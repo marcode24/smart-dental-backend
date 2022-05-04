@@ -21,7 +21,7 @@ export class ServicesService {
     return serviceCreated;
   }
 
-  async findAll(name: string, limit: number = 5, offset: number = 0, ) {
+  async findAll(name: string, limit: number = 5, offset: number = 0) {
     const newLimit = limit || 5;
     const newOffset = offset || 0;
     let options: FindOptions = {
@@ -43,6 +43,16 @@ export class ServicesService {
     ]);
     const data = { services, totalActive, totalInactive };
     return data;
+  }
+
+  async findByFilter(odontogram: boolean = false) {
+    const servicesFound = await this.serviceModel.findAll({
+      where: {
+        odontogram,
+        status: true
+      }
+    });
+    return { services: servicesFound };
   }
 
   async findById(serviceId: number) {

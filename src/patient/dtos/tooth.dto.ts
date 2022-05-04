@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsBoolean,
   IsNotEmpty, IsNumber, IsPositive
@@ -41,3 +42,5 @@ export class CreateToothDto {
   oclusal: boolean;
 
 }
+
+export class UpdateToothDto extends PartialType(CreateToothDto) {}

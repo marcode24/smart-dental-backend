@@ -1,11 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
-import { CreateToothDto } from '../dtos/tooth.dto';
+
+import { CreateToothDto, UpdateToothDto } from '../dtos/tooth.dto';
 
 import { ToothService } from '../services/tooth.service';
 
@@ -24,13 +26,20 @@ export class ToothController {
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)
-  @Get('/:patientId')
+  @Get('/patient/:patientId')
   findByPatient(
     @Param('patientId', ParseIntPipe) patientId: number,
   ) {
     return this.toothService.findByPatient(patientId);
   }
 
-
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Patch('/:toothId')
+  update(
+    @Param('toothId', ParseIntPipe) toothId: number,
+    @Body() payload: UpdateToothDto
+  ) {
+    return this.toothService.update(toothId, payload);
+  }
 
 }

@@ -10,7 +10,10 @@ import {
   Model,
   PrimaryKey,
   Table
-} from "sequelize-typescript"
+} from "sequelize-typescript";
+
+import { AppointmentDetail } from "src/appointment/entities/appointment-detail.entity";
+import { Appointment } from "src/appointment/entities/appointment.entity";
 
 import { Service } from "src/service/entities/service.entity";
 import { Patient } from "./patient.entity";
@@ -55,16 +58,11 @@ export class Record extends Model {
   @Column(DataType.STRING(50))
   status: string;
 
-  @AllowNull(true)
-  @Default(null)
-  @Column(DataType.DATE)
-  completed_date: Date;
-
   @Default(null)
   @Column(DataType.DATE)
   payment_date: Date;
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.DATE)
   realization_date: Date;
 
@@ -72,5 +70,8 @@ export class Record extends Model {
   @Default(null)
   @Column(DataType.DATE)
   cancel_date: Date;
+
+  @BelongsToMany(() => Appointment, () => AppointmentDetail)
+  appointments: Array<Appointment & { AppoinmentDetail: AppointmentDetail }> ;
 
 }
