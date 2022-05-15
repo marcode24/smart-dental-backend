@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions, Op } from 'sequelize';
 
-import { CreatePatientDto } from '../dtos/patient.dto';
+import { CreatePatientDto, UpdatePatientDto } from '../dtos/patient.dto';
 
 import { Familiar } from '../entities/familiar.entity';
 import { Patient } from '../entities/patient.entity';
@@ -48,13 +48,20 @@ export class PatientService {
     return patientDb;
   }
 
-  async findbyUserAndPatient(userID: number, patientID: number) {
-    const patientFound = await this.patientModel.findOne({
+  async findbyUserAndPatient(userID: number, patientID: number, isAdmin: boolean = false) {
+    const optionQuery: FindOptions = {
       where: {
         id_patient: patientID,
         id_user: userID,
-      }
-    });
+      },
+      include: [
+        {
+          model: Familiar
+        }
+      ]
+    };
+    (isAdmin) ? delete optionQuery.where['id_user'] : '';
+    const patientFound = await this.patientModel.findOne(optionQuery);
     if(!patientFound) {
       return new BadRequestException('You do not have access for this patient');
     }
@@ -137,5 +144,14 @@ export class PatientService {
       }
     );
   }
+
+  async update(patientID: number, familiarID: number, changes: UpdatePatientDto) {
+    const { familiar: familiarChanges, ...infoPatient } = changes;
+    return await Promise.all([
+      this.patientModel.update(infoPatient, { where: { id_patient: patientID } }),
+      this.familiarService.update(familiarID, familiarChanges),
+    ])
+  }
+
 
 }

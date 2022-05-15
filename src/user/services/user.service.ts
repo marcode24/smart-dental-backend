@@ -98,10 +98,7 @@ export class UserService {
         attributes: { exclude: ['password'] }
       }
     );
-    if(!userFound) {
-      return new NotFoundException(`user not found with id: ${userId}`);
-    }
-    return userFound;
+    return { user: userFound };
   }
 
   async setStatusUser(userId: number, value:boolean) {

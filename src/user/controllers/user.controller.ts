@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
@@ -20,8 +20,12 @@ export class UsersController {
   }
 
   @Get('/:id')
-  findById(@Param('id', ParseIntPipe) userId: number) {
-    return this.userService.findById(userId);
+  async findById(@Param('id', ParseIntPipe) userId: number) {
+    const resp = await this.userService.findById(userId);
+    if(!resp.user) {
+      return new NotFoundException(`user not found with id: ${userId}`);
+    }
+    return resp;
   }
 
   @Post()
