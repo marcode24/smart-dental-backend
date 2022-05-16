@@ -8,7 +8,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
 import { CreatePatientDto, UpdatePatientDto } from '../dtos/patient.dto';
-import { ISearchParams } from '../models/search.model';
+import { ISearchParams } from '../../common/models/search.model';
 
 import { PatientService } from '../services/patient.service';
 
@@ -74,6 +74,15 @@ export class PatientController {
     @Param('idUser', ParseIntPipe) newUserId: number,
   ) {
     return this.patientService.changeUser(patientId, newUserId);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Patch('/:id')
+  changeStatus(
+    @Param('id', ParseIntPipe) patientId: number,
+    @Body('status') status: boolean,
+  ) {
+    return this.patientService.setStatusPatient(patientId, status);
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)

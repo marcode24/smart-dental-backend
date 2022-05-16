@@ -1,5 +1,7 @@
 import { Body, Controller, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { ISearchParams } from 'src/common/models/search.model';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
+
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
 
@@ -12,11 +14,13 @@ export class UsersController {
 
   @Get()
   findAll(
-    @Query('fullname') fullname: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string
+    @Query('all') all: string,
+    @Query('fullname') fullname?: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
   ) {
-    return this.userService.findAll(fullname, +limit, +offset);
+    const optionsParams: ISearchParams = { fullname, limit, offset, all: (all === 'true') };
+    return this.userService.findAll(optionsParams);
   }
 
   @Get('/:id')

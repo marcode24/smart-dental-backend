@@ -10,7 +10,7 @@ import { User } from 'src/user/entities/user.entity';
 
 import { FamiliarService } from './familiar.service';
 
-import { ISearchParams } from '../models/search.model';
+import { ISearchParams } from '../../common/models/search.model';
 
 @Injectable()
 export class PatientService {
@@ -19,7 +19,7 @@ export class PatientService {
     include: [
       {
         model: User,
-        attributes: ['id_user', 'name', 'last_name']
+        attributes: ['id_user', 'name', 'last_name', 'image']
       },
       {
         model: Familiar
@@ -57,6 +57,10 @@ export class PatientService {
       include: [
         {
           model: Familiar
+        },
+        {
+          model: User,
+          attributes: ['id_user', 'name', 'last_name', 'image']
         }
       ]
     };
@@ -153,5 +157,9 @@ export class PatientService {
     ])
   }
 
+  async setStatusPatient(patientId: number, value: boolean) {
+    const status = Boolean(value);
+    return await this.patientModel.update({ status }, { where: { id_patient: patientId } });
+  }
 
 }

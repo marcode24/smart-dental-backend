@@ -10,6 +10,7 @@ import { User } from '../entities/user.entity';
 import { Role } from 'src/auth/enums/roles.enum';
 
 import { AuthService } from 'src/auth/services/auth.service';
+import { ISearchParams } from 'src/common/models/search.model';
 
 @Injectable()
 export class UserService {
@@ -61,27 +62,40 @@ export class UserService {
     return usersFound ? true : false ;
   }
 
-  async findAll(fullname: string, limit: number = 5, offset: number = 0, ) {
-    const newLimit = limit || 5;
-    const newOffset = offset || 0;
-    let options: FindOptions = {
-      attributes: { exclude: ['password'] },
-      limit: newLimit,
-      offset: newOffset,
-    };
-    if(fullname) {
-      const search = `%${fullname.toString()}%`
-      const { attributes } = options;
+  async findAll(optionsParams: ISearchParams) {
+    const { fullname, limit, offset, all } = optionsParams;
+    let options: FindOptions = {};
+    if(all) {
       options = {
-        attributes,
+        attributes: [ 'id_user', 'name', 'last_name', 'image' ],
         where: {
-          [Op.or]: {
-            name: { [Op.like]: search },
-            last_name: { [Op.like]: search },
-          },
-        },
+          status: true,
+        }
+      }
+    } else {
+      const newLimit = Number(limit) || 5;
+      const newOffset = Number(offset) || 0;
+      options = {
+        attributes: { exclude: ['password'] },
+        limit: newLimit,
+        offset: newOffset,
       };
+      console.log({options});
+      if(fullname) {
+        const search = `%${fullname.toString()}%`
+        const { attributes } = options;
+        options = {
+          attributes,
+          where: {
+            [Op.or]: {
+              name: { [Op.like]: search },
+              last_name: { [Op.like]: search },
+            },
+          },
+        };
+      }
     }
+    console.log(options);
     const [ users, totalAdmin, totalUser ] = await Promise.all([
       this.userModel.findAll(options),
       this.userModel.count({ where: { role: Role.ADMIN } }),
