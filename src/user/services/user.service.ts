@@ -129,7 +129,11 @@ export class UserService {
 
   async update(userId: number, changes: UpdateUserDto) {
     const { password, ...rest } = changes;
-    return await this.userModel.update(rest, { where: { id_user: userId }});
+    const [resp] = await this.userModel.update(rest, { where: { id_user: userId }});
+    if(resp === 1) {
+      return await this.findById(userId);
+    }
+    return { user: null };
   }
 
   async findByUsername(username: string) {
@@ -138,6 +142,12 @@ export class UserService {
       return new NotFoundException('user not found');
     }
     return user.get({ plain:true });
+  }
+
+  async changeCode(idUser: number) {
+    const newCode = this.generateCode();
+    await this.userModel.update({  code: newCode }, { where: { id_user: idUser } });
+    return { newCode };
   }
 
 }

@@ -1,4 +1,6 @@
 import { Body, Controller, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/roles.enum';
 import { ISearchParams } from 'src/common/models/search.model';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
@@ -44,6 +46,14 @@ export class UsersController {
     @Body('status') status: boolean
   ) {
     return this.userService.setStatusUser(userId, status);
+  }
+
+  @Roles(Role.ADMIN)
+  @Patch('/changeCode/:idUser')
+  changeCode(
+    @Param('idUser', ParseIntPipe) userId: number
+  ) {
+    return this.userService.changeCode(userId);
   }
 
   @Put('/:id')
