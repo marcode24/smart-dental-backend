@@ -42,8 +42,12 @@ export class Appointment extends Model {
   id_user: number;
 
   @AllowNull(false)
-  @Column(DataType.DATE)
+  @Column(DataType.DATEONLY)
   date: Date;
+
+  @AllowNull(false)
+  @Column(DataType.TIME)
+  time: string;
 
   @Column(DataType.STRING(1024))
   description: string;

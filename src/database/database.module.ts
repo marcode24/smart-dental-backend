@@ -29,7 +29,6 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
           username,
           synchronize: false,
           autoLoadModels: true,
-          timezone: '+00:00'
         };
       },
     }),

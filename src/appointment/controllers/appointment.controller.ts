@@ -4,6 +4,7 @@ import { Role } from 'src/auth/enums/roles.enum';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ISearchParams } from 'src/common/models/search.model';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
 import { ChangeStatusAppointmentDto, CreateAppointmentDto } from '../dtos/appointment.dto';
@@ -38,8 +39,17 @@ export class AppointmentController {
     @Param('userID', ParseIntPipe) userID: number,
     @Query('status') status: StatusAppointment,
     @Query('date') date: Date,
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number,
+    @Query('fullname') fullname: string,
   ) {
-    return this.appointmentService.findByUser(userID, status, date);
+    let newDate: string;
+    let optionsParams: ISearchParams = { limit, offset, fullname }
+    if(date) {
+      newDate = date.toISOString().split('T')[0];
+      optionsParams.date = newDate;
+    }
+    return this.appointmentService.findByUser(userID, status, optionsParams);
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)

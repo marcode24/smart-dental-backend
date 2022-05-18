@@ -3,4 +3,6 @@ export interface ISearchParams {
   limit: number;
   offset: number;
   all?: boolean;
+  status?: string;
+  date?: string;
 }

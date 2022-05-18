@@ -3,6 +3,7 @@ import {
   IsArray,
   IsDateString,
   IsInstance,
+  IsMilitaryTime,
   IsNotEmpty,
   IsNumber,
   Validate,
@@ -25,7 +26,11 @@ export class CreateAppointmentDto {
 
   @IsNotEmpty()
   @IsDateString()
-  readonly date: Date;
+  date: string;
+
+  @IsNotEmpty()
+  @IsMilitaryTime()
+  readonly time: string;
 
   @ValidateIf((_, value) => value !== null)
   readonly description: string;
