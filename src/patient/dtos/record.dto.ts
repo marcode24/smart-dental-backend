@@ -24,9 +24,6 @@ export class CreateRecordDto {
   @IsPositive()
   quantity: number;
 
-  @ValidateIf((_, value) => value !== null)
-  realization_date: Date;
-
 }
 
 export class UpdateRecordDto extends PartialType(CreateRecordDto) {}

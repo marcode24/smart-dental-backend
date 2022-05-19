@@ -31,31 +31,39 @@ export class RecordService {
 
   async changeStatus(recordId: number, newStatus: string) {
     const recordDB = await this.recordModel.findByPk(recordId);
+    if(!recordDB) {
+      return new NotFoundException(`record not found with id ${recordId}`);
+    }
     const { status } = recordDB;
     if(status === Status.CANCELLED) {
       return new BadRequestException('you can not change status');
     }
+    const newDate = new Date();
+    const newTime = `${newDate.getHours()}:${newDate.getMinutes()}`;
     switch (newStatus) {
       case 'cancel':
         if(status === Status.PENDING_PAYMENT || status === Status.COMPLETED) {
           return new BadRequestException('you can not change status record');
         }
         recordDB.status = Status.CANCELLED;
-        recordDB.cancel_date = new Date();
+        recordDB.cancel_date = newDate;
+        recordDB.cancel_time = newTime;
         break;
       case 'paid':
         if(status !== Status.PENDING_PAYMENT) {
           return new BadRequestException('must be pending payment to change status');
         }
         recordDB.status = Status.COMPLETED;
-        recordDB.payment_date = new Date();
+        recordDB.payment_date = newDate;
+        recordDB.payment_time = newTime;
         break;
       case 'done':
         if(status !== Status.PENDING) {
           return new BadRequestException('must be pending to change status');
         }
         recordDB.status = Status.PENDING_PAYMENT;
-        recordDB.realization_date = new Date();
+        recordDB.realization_date = newDate;
+        recordDB.realization_time = newTime;
         break;
       default:
         return new BadRequestException('must provide a valid status option');

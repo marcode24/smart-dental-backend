@@ -22,7 +22,7 @@ export class ToothService {
   ) {}
 
   async create(data: CreateToothDto) {
-    const createRecord: CreateRecordDto = { ...data, quantity: 1, realization_date: new Date() };
+    const createRecord: CreateRecordDto = { ...data, quantity: 1 };
     const recordCreated = await this.recordService.create(createRecord);
     const newTooth = new this.toothModel(data);
     newTooth.id_record = recordCreated.id_record;
