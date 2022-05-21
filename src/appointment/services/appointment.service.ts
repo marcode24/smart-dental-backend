@@ -1,15 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { FindOptions } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 
 import { ChangeStatusAppointmentDto, CreateAppointmentDto } from '../dtos/appointment.dto';
 
 import { AppointmentDetail } from '../entities/appointment-detail.entity';
 import { Appointment } from '../entities/appointment.entity';
 import { Record } from 'src/patient/entities/record.entity';
-import { StatusAppointment } from '../enums/status-appointment.enum';
 import { Patient } from 'src/patient/entities/patient.entity';
-import { Op } from 'sequelize';
+
+import { StatusAppointment } from '../enums/status-appointment.enum';
+
 import { ISearchParams } from 'src/common/models/search.model';
 
 @Injectable()
@@ -53,9 +54,12 @@ export class AppointmentService {
         id_user,
       },
       include: [ Record, Patient ],
+      limit,
+      offset,
     };
+
+    let optionsQueryCount: FindOptions = { where: { status } };
     if(fullname) {
-      console.log('entro a fullname');
       const search = `%${fullname.toString().trim()}%`
       optionsQuery = {
         where: {
@@ -77,24 +81,22 @@ export class AppointmentService {
       return { appointments: await this.appointmentModel.findAll(optionsQuery) };
     }
     if(date) {
-      console.log('entra a date');
-      optionsQuery.where = {
-        ...optionsQuery.where,
-        date: {
-          [Op.gte]: date,
-          [Op.lte]: date
-        }
-      };
-      return { appointments: await this.appointmentModel.findAll(optionsQuery) };
+      optionsQuery = {
+        ...optionsQuery,
+        where: {
+          ...optionsQuery.where,
+          date: {
+            [Op.gte]: date,
+            [Op.lte]: date
+          }
+        },
+      }
+      const { limit, offset, include, ...rest } = optionsQuery;
+      optionsQueryCount = { ...rest };
     }
-    optionsQuery = {
-      ...optionsQuery,
-      limit,
-      offset
-    };
     const [appointments, total] = await Promise.all([
       this.appointmentModel.findAll(optionsQuery),
-      this.appointmentModel.count({ where:  { status } }),
+      this.appointmentModel.count(optionsQueryCount),
     ])
     return { appointments, total };
   }
@@ -105,7 +107,6 @@ export class AppointmentService {
       return new NotFoundException(`appointment not found with id ${id_appointment}`);
     }
     appointmentFound.status = data.status;
-    console.log(appointmentFound);
     return await appointmentFound.save();
   }
 
