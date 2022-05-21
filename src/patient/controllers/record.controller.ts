@@ -5,6 +5,7 @@ import { Role } from 'src/auth/enums/roles.enum';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ISearchParamsStatistics } from 'src/common/models/search.model';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
 import { CreateRecordDto, UpdateRecordDto } from '../dtos/record.dto';
@@ -34,6 +35,26 @@ export class RecordController {
     return this.recordService.changeStatus(recordId, newStatus);
   }
 
+  @Roles(Role.ADMIN)
+  @Get('/statistics')
+  getStatistics(
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return this.recordService.statistics(limit);
+  }
+
+  @Roles(Role.ADMIN)
+  @Get('/statistics/date')
+  getStatisticsDate(
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('offset', ParseIntPipe) offset: number,
+    @Query('type') type: string,
+    @Query('option') option: string,
+  ) {
+    const params: ISearchParamsStatistics = { limit, offset, type, option };
+    return this.recordService.statisticsByDate(params);
+  }
+
   @Roles(Role.ADMIN, Role.DENTIST)
   @Get('/:patientId')
   findByPatient(
@@ -51,5 +72,6 @@ export class RecordController {
   ) {
     return this.recordService.update(recordId, payload);
   }
+
 
 }

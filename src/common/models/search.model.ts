@@ -6,3 +6,10 @@ export interface ISearchParams {
   status?: string;
   date?: string;
 }
+
+export interface ISearchParamsStatistics {
+  limit: number;
+  offset: number;
+  type: string;
+  option: string;
+}
