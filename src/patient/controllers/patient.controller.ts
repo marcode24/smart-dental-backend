@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, Response, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, Response, UseGuards } from '@nestjs/common';
 
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -7,8 +7,8 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
-import { CreatePatientDto } from '../dtos/patient.dto';
-import { ISearchParams } from '../models/search.model';
+import { CreatePatientDto, UpdatePatientDto } from '../dtos/patient.dto';
+import { ISearchParams } from '../../common/models/search.model';
 
 import { PatientService } from '../services/patient.service';
 
@@ -44,8 +44,9 @@ export class PatientController {
   findByUserAndPatient(
     @Param('patientId', ParseIntPipe) patientId: number,
     @Param('userId', ParseIntPipe) userId: number,
+    @Query('isAdmin') isAdmin: string,
   ) {
-    return this.patientService.findbyUserAndPatient(userId, patientId);
+    return this.patientService.findbyUserAndPatient(userId, patientId, (isAdmin === 'true'));
   }
 
   @Roles(Role.ADMIN, Role.DENTIST)
@@ -73,6 +74,25 @@ export class PatientController {
     @Param('idUser', ParseIntPipe) newUserId: number,
   ) {
     return this.patientService.changeUser(patientId, newUserId);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Patch('/:id')
+  changeStatus(
+    @Param('id', ParseIntPipe) patientId: number,
+    @Body('status') status: boolean,
+  ) {
+    return this.patientService.setStatusPatient(patientId, status);
+  }
+
+  @Roles(Role.ADMIN, Role.DENTIST)
+  @Put('/:idPatient/:idFamiliar')
+  update(
+    @Param('idPatient', ParseIntPipe) patientID: number,
+    @Param('idFamiliar', ParseIntPipe) familiarID: number,
+    @Body() payload: UpdatePatientDto,
+  ) {
+    return this.patientService.update(patientID, familiarID, payload);
   }
 
 }

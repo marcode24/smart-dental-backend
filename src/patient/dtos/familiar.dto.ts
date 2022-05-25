@@ -1,3 +1,4 @@
+import { PartialType } from "@nestjs/mapped-types";
 import {
   IsEmail,
   IsNotEmpty,
@@ -43,3 +44,5 @@ export class CreateFamiliarDto {
   readonly familiar_phone_number: number;
 
 }
+
+export class UpdateFamiliarDto extends PartialType(CreateFamiliarDto) {}

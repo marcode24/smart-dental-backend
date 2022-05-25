@@ -3,10 +3,12 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 @Injectable()
 export class ParseIntPipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
-    const newValue = parseInt(value, 10);
-    if (isNaN(newValue)) {
-      throw new BadRequestException(`${value} is not a valid id`);
+    if(value) {
+      const newValue = parseInt(value, 10);
+      if (isNaN(newValue)) {
+        throw new BadRequestException(`${value} is not a valid id`);
+      }
+      return newValue;
     }
-    return newValue;
   }
 }

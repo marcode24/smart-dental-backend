@@ -1,3 +1,4 @@
+import { PartialType } from "@nestjs/mapped-types";
 import { Type } from "class-transformer";
 import {
   IsDateString,
@@ -18,13 +19,13 @@ export class CreatePatientDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(2)
   @MaxLength(20)
   readonly name: string;
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(5)
+  @MinLength(2)
   @MaxLength(20)
   readonly last_name: string;
 
@@ -54,7 +55,7 @@ export class CreatePatientDto {
   readonly cp: number;
 
   @IsNotEmpty()
-  @MinLength(4)
+  @MinLength(2)
   @MaxLength(50)
   readonly city: string;
 
@@ -82,3 +83,5 @@ export class CreatePatientDto {
   readonly familiar: CreateFamiliarDto;
 
 }
+
+export class UpdatePatientDto extends PartialType(CreatePatientDto) {}

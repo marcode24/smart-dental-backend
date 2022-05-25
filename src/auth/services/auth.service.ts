@@ -31,11 +31,11 @@ export class AuthService {
   }
 
   async renewToken(userId: number) {
-    const user = await this.userService.findById(userId) as User;
-    if(!user.status) {
+    const { user: userFound } = await this.userService.findById(userId);
+    if(!userFound.status) {
       return new ForbiddenException('User disabled');
     }
-    return this.generateJWT(user as User);
+    return this.generateJWT(userFound as User);
   }
 
   async generateJWT(user: User) {

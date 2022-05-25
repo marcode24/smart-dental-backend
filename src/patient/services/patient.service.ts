@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions, Op } from 'sequelize';
 
-import { CreatePatientDto } from '../dtos/patient.dto';
+import { CreatePatientDto, UpdatePatientDto } from '../dtos/patient.dto';
 
 import { Familiar } from '../entities/familiar.entity';
 import { Patient } from '../entities/patient.entity';
@@ -10,7 +10,7 @@ import { User } from 'src/user/entities/user.entity';
 
 import { FamiliarService } from './familiar.service';
 
-import { ISearchParams } from '../models/search.model';
+import { ISearchParams } from '../../common/models/search.model';
 
 @Injectable()
 export class PatientService {
@@ -19,7 +19,7 @@ export class PatientService {
     include: [
       {
         model: User,
-        attributes: ['id_user', 'name', 'last_name']
+        attributes: ['id_user', 'name', 'last_name', 'image']
       },
       {
         model: Familiar
@@ -48,13 +48,24 @@ export class PatientService {
     return patientDb;
   }
 
-  async findbyUserAndPatient(userID: number, patientID: number) {
-    const patientFound = await this.patientModel.findOne({
+  async findbyUserAndPatient(userID: number, patientID: number, isAdmin: boolean = false) {
+    const optionQuery: FindOptions = {
       where: {
         id_patient: patientID,
         id_user: userID,
-      }
-    });
+      },
+      include: [
+        {
+          model: Familiar
+        },
+        {
+          model: User,
+          attributes: ['id_user', 'name', 'last_name', 'image']
+        }
+      ]
+    };
+    (isAdmin) ? delete optionQuery.where['id_user'] : '';
+    const patientFound = await this.patientModel.findOne(optionQuery);
     if(!patientFound) {
       return new BadRequestException('You do not have access for this patient');
     }
@@ -136,6 +147,19 @@ export class PatientService {
         }
       }
     );
+  }
+
+  async update(patientID: number, familiarID: number, changes: UpdatePatientDto) {
+    const { familiar: familiarChanges, ...infoPatient } = changes;
+    return await Promise.all([
+      this.patientModel.update(infoPatient, { where: { id_patient: patientID } }),
+      this.familiarService.update(familiarID, familiarChanges),
+    ])
+  }
+
+  async setStatusPatient(patientId: number, value: boolean) {
+    const status = Boolean(value);
+    return await this.patientModel.update({ status }, { where: { id_patient: patientId } });
   }
 
 }

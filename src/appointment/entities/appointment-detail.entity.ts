@@ -10,7 +10,7 @@ import {
 import { Record } from "src/patient/entities/record.entity";
 import { Appointment } from "./appointment.entity";
 
-@Table({ timestamps: true, tableName: 'appointment_detail', initialAutoIncrement: '1' })
+@Table({ timestamps: false, tableName: 'appointment_detail', initialAutoIncrement: '1' })
 export class AppointmentDetail extends Model {
 
   @PrimaryKey

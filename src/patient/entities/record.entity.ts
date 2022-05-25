@@ -59,17 +59,28 @@ export class Record extends Model {
   status: string;
 
   @Default(null)
-  @Column(DataType.DATE)
+  @Column(DataType.DATEONLY)
   payment_date: Date;
 
-  @AllowNull(true)
-  @Column(DataType.DATE)
+  @Default(null)
+  @Column(DataType.TIME)
+  payment_time: string;
+
+  @Default(null)
+  @Column(DataType.DATEONLY)
   realization_date: Date;
 
-  @AllowNull(true)
   @Default(null)
-  @Column(DataType.DATE)
+  @Column(DataType.TIME)
+  realization_time: string;
+
+  @Default(null)
+  @Column(DataType.DATEONLY)
   cancel_date: Date;
+
+  @Default(null)
+  @Column(DataType.TIME)
+  cancel_time: string;
 
   @BelongsToMany(() => Appointment, () => AppointmentDetail)
   appointments: Array<Appointment & { AppoinmentDetail: AppointmentDetail }> ;

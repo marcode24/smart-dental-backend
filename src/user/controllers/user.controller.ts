@@ -1,5 +1,9 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/roles.enum';
+import { ISearchParams } from 'src/common/models/search.model';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
+
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { UserService } from '../services/user.service';
 
@@ -12,16 +16,22 @@ export class UsersController {
 
   @Get()
   findAll(
-    @Query('fullname') fullname: string,
-    @Query('limit') limit?: string,
-    @Query('offset') offset?: string
+    @Query('all') all: string,
+    @Query('fullname') fullname?: string,
+    @Query('limit') limit?: number,
+    @Query('offset') offset?: number,
   ) {
-    return this.userService.findAll(fullname, +limit, +offset);
+    const optionsParams: ISearchParams = { fullname, limit, offset, all: (all === 'true') };
+    return this.userService.findAll(optionsParams);
   }
 
   @Get('/:id')
-  findById(@Param('id', ParseIntPipe) userId: number) {
-    return this.userService.findById(userId);
+  async findById(@Param('id', ParseIntPipe) userId: number) {
+    const resp = await this.userService.findById(userId);
+    if(!resp.user) {
+      return new NotFoundException(`user not found with id: ${userId}`);
+    }
+    return resp;
   }
 
   @Post()
@@ -36,6 +46,14 @@ export class UsersController {
     @Body('status') status: boolean
   ) {
     return this.userService.setStatusUser(userId, status);
+  }
+
+  @Roles(Role.ADMIN)
+  @Patch('/changeCode/:idUser')
+  changeCode(
+    @Param('idUser', ParseIntPipe) userId: number
+  ) {
+    return this.userService.changeCode(userId);
   }
 
   @Put('/:id')
