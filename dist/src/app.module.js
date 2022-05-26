@@ -28,7 +28,8 @@ AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             serve_static_1.ServeStaticModule.forRoot({
-                rootPath: (0, path_1.join)(__dirname, '..', 'front-end'),
+                rootPath: (0, path_1.join)(__dirname, 'front'),
+                exclude: ['/api*'],
             }),
             config_1.ConfigModule.forRoot({
                 envFilePath: environment_1.environments[process.env.NODE_ENV] || '.env',

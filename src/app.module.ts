@@ -19,7 +19,8 @@ import { join } from 'path';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'front-end'),
+      rootPath: join(__dirname, 'front'),
+      exclude: ['/api*'],
     }),
     ConfigModule.forRoot({
       envFilePath: environments[process.env.NODE_ENV] || '.env',
