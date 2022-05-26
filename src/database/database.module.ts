@@ -19,17 +19,18 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
     SequelizeModule.forRootAsync({
       inject: [ config.KEY ],
       useFactory: async(configService: ConfigType<typeof config>) => {
-        const { dbName, host, password, port, username } = configService.mysql;
+        const { host, dbName, password, port, username } = configService.mysql;
         return {
           dialect: 'mysql',
           database: dbName,
-          host: 'localhost',
+          host,
           password,
-          port,
           username,
+          port,
           synchronize: false,
           autoLoadModels: true,
         };
+
       },
     }),
   ],
@@ -38,15 +39,15 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
       provide: 'MYSQL',
       inject: [ config.KEY ],
       useFactory: async (configService: ConfigType<typeof config>) => {
-        const { dbName, host, password, port, username } = configService.mysql;
+        const { host, dbName, password, port, username } = configService.mysql;
+        console.log(configService.mysql);
         const sequelize = new Sequelize({
           dialect: 'mysql',
-          host: 'localhost', //fix it ** not found localhost env
-          port,
-          username,
-          password,
           database: dbName,
-          timezone: '+00:00'
+          host,
+          password,
+          username,
+          port,
         });
         sequelize.addModels([
           User,
