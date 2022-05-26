@@ -23,7 +23,7 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
         return {
           dialect: 'mysql',
           database: dbName,
-          host: 'localhost', // fix it ** not found localhost env
+          host: 'localhost',
           password,
           port,
           username,
