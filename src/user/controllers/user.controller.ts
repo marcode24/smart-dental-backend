@@ -14,6 +14,7 @@ export class UsersController {
     private readonly userService: UserService
   ) {}
 
+  @Roles(Role.ADMIN)
   @Get()
   findAll(
     @Query('all') all: string,
@@ -25,6 +26,7 @@ export class UsersController {
     return this.userService.findAll(optionsParams);
   }
 
+  @Roles(Role.ADMIN)
   @Get('/:id')
   async findById(@Param('id', ParseIntPipe) userId: number) {
     const resp = await this.userService.findById(userId);
@@ -39,6 +41,7 @@ export class UsersController {
     return this.userService.create(payload);
   }
 
+  @Roles(Role.ADMIN)
   @HttpCode(201)
   @Patch('/:id')
   changeStatus(
@@ -56,6 +59,7 @@ export class UsersController {
     return this.userService.changeCode(userId);
   }
 
+  @Roles(Role.ADMIN)
   @Put('/:id')
   update(
     @Param('id', ParseIntPipe) userId: number,
