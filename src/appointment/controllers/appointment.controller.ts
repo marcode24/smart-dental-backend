@@ -58,7 +58,6 @@ export class AppointmentController {
     @Param('appointmentID', ParseIntPipe) appointmentID: number,
     @Body() payload: ChangeStatusAppointmentDto
   ){
-    console.log(appointmentID);
     return this.appointmentService.changeStatus(appointmentID, payload)
   }
 

@@ -32,7 +32,6 @@ export class UserService {
       data.code = this.generateCode();
     }
     const newModel = new this.userModel(data);
-    console.log(newModel);
     const { username } = newModel;
     if(await this.validateUserUnique(username)) {
       return new BadRequestException('username already in use');
@@ -80,7 +79,6 @@ export class UserService {
         limit: newLimit,
         offset: newOffset,
       };
-      console.log({options});
       if(fullname) {
         const search = `%${fullname.toString()}%`
         const { attributes } = options;
@@ -95,7 +93,6 @@ export class UserService {
         };
       }
     }
-    console.log(options);
     const [ users, totalAdmin, totalUser ] = await Promise.all([
       this.userModel.findAll(options),
       this.userModel.count({ where: { role: Role.ADMIN } }),

@@ -131,7 +131,6 @@ export class RecordService {
         total: Number(res['total']),
         statistics: [],
       }
-      console.log({newResult});
       newResults.push(newResult);
     });
     for await(let res of newResults) {

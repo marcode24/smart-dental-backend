@@ -40,7 +40,6 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
       inject: [ config.KEY ],
       useFactory: async (configService: ConfigType<typeof config>) => {
         const { host, dbName, password, port, username } = configService.mysql;
-        console.log(configService.mysql);
         const sequelize = new Sequelize({
           dialect: 'mysql',
           database: dbName,
