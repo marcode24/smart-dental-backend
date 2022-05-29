@@ -108,7 +108,7 @@ export class RecordService {
   async statistics(limit: number = 3) {
     const results = await this.recordModel.sequelize.query(`
     SELECT
-      COUNT(r.id_service) as total_service,
+      SUM(quantity) as total_service,
       r.id_service,
       s.name,
       sum(r.price * r.quantity) as total

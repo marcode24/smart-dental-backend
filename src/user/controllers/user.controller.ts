@@ -1,4 +1,5 @@
 import { Body, Controller, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Public } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -39,6 +40,7 @@ export class UsersController {
     return resp;
   }
 
+  @Public()
   @Post()
   create(@Body() payload: CreateUserDto) {
     return this.userService.create(payload);

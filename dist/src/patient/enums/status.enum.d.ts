@@ -1,6 +1,0 @@
-export declare enum Status {
-    PENDING = "PENDING",
-    COMPLETED = "COMPLETED",
-    CANCELLED = "CANCELLED",
-    PENDING_PAYMENT = "PENDING_PAYMENT"
-}
