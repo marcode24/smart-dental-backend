@@ -9,7 +9,7 @@ async function bootstrap() {
     whitelist: true,
   }));
   app.setGlobalPrefix('/api/');
-  const whitelist = ['https://smart-dental-a704f.firebaseapp.com/', 'https://smart-dental-a704f.web.app/'];
+  const whitelist = ['https://smart-dental-a704f.firebaseapp.com', 'https://smart-dental-a704f.web.app'];
   app.enableCors({
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
