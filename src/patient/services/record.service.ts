@@ -149,7 +149,7 @@ export class RecordService {
     FROM record r
     WHERE r.status = 'COMPLETED'
       AND id_service = :id_service
-      AND r.realization_date > CURRENT_DATE - INTERVAL 7 DAY
+      AND r.realization_date > CURRENT_DATE - INTERVAL 14 DAY
     GROUP BY r.realization_date, r.id_service ;
     `, {
       replacements: { id_service: serviceID },
