@@ -58,7 +58,7 @@ export class AppointmentService {
       offset,
     };
 
-    let optionsQueryCount: FindOptions = { where: { status } };
+    let optionsQueryCount: FindOptions = { where: { status, id_user } };
     if(fullname) {
       const search = `%${fullname.toString().trim()}%`
       optionsQuery = {
