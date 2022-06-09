@@ -9,9 +9,9 @@ export declare class RecordService {
     private servicesService;
     constructor(recordModel: typeof Record, servicesService: ServicesService);
     create(data: CreateRecordDto): Promise<Record>;
-    changeStatus(recordId: number, newStatus: string): Promise<BadRequestException | NotFoundException | Record>;
+    changeStatus(recordId: number, newStatus: string): Promise<Record | NotFoundException | BadRequestException>;
     findByPatient(patientId: number, filter: number): Promise<Record[]>;
-    update(idRecord: number, data: UpdateRecordDto): Promise<BadRequestException | NotFoundException | 0 | Record>;
+    update(idRecord: number, data: UpdateRecordDto): Promise<Record | NotFoundException | BadRequestException | 0>;
     statistics(limit?: number): Promise<IStatistics[]>;
     private statisticsByDays;
     statisticsByDate(optionsParams: ISearchParamsStatistics): Promise<BadRequestException | {
