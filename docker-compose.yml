@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   mysql:
+    container_name: smart_dental_mysql
     image: mysql:8.0
     environment:
      - MYSQL_DATABASE=smart_dental

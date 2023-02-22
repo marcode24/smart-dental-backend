@@ -13,5 +13,5 @@ export declare class AppointmentController {
         appointments: import("../entities/appointment.entity").Appointment[];
         total: number;
     }>;
-    changeStatus(appointmentID: number, payload: ChangeStatusAppointmentDto): Promise<import("@nestjs/common").NotFoundException | import("../entities/appointment.entity").Appointment>;
+    changeStatus(appointmentID: number, payload: ChangeStatusAppointmentDto): Promise<import("../entities/appointment.entity").Appointment | import("@nestjs/common").NotFoundException>;
 }

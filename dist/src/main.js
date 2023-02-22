@@ -8,11 +8,15 @@ async function bootstrap() {
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
     }));
-    app.setGlobalPrefix('/api/');
-    const whitelist = ['https://smart-dental-a704f.firebaseapp.com', 'https://smart-dental-a704f.web.app'];
+    app.setGlobalPrefix('/api/v1/');
+    const whitelist = [
+        'https://smart-dental-a704f.firebaseapp.com',
+        'https://smart-dental-a704f.web.app',
+        'http://localhost:3000/'
+    ];
     app.enableCors({
         origin: function (origin, callback) {
-            if (whitelist.indexOf(origin) !== -1) {
+            if (!origin || whitelist.indexOf(origin) !== -1) {
                 callback(null, true);
             }
             else {

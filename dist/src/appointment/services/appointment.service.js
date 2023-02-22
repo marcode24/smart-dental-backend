@@ -71,7 +71,7 @@ let AppointmentService = class AppointmentService {
             limit,
             offset,
         };
-        let optionsQueryCount = { where: { status } };
+        let optionsQueryCount = { where: { status, id_user } };
         if (fullname) {
             const search = `%${fullname.toString().trim()}%`;
             optionsQuery = {

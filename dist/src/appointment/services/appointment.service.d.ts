@@ -17,5 +17,5 @@ export declare class AppointmentService {
         appointments: Appointment[];
         total: number;
     }>;
-    changeStatus(id_appointment: number, data: ChangeStatusAppointmentDto): Promise<NotFoundException | Appointment>;
+    changeStatus(id_appointment: number, data: ChangeStatusAppointmentDto): Promise<Appointment | NotFoundException>;
 }
