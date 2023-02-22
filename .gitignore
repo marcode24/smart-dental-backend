@@ -1,6 +1,7 @@
 # compiled output
 /node_modules
 /mysql
+/dist
 
 # Logs
 logs
@@ -38,5 +39,3 @@ lerna-debug.log*
 *.env
 
 .vercel
-
-dist
