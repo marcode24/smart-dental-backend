@@ -1,5 +1,5 @@
-import { PartialType } from "@nestjs/mapped-types";
-import { Type } from "class-transformer";
+import { PartialType } from '@nestjs/mapped-types';
+import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsDefined,
@@ -9,14 +9,13 @@ import {
   IsString,
   MaxLength,
   MinLength,
-  Validate,
   ValidateIf,
-  ValidateNested
-} from "class-validator";
-import { CreateFamiliarDto } from "./familiar.dto";
+  ValidateNested,
+} from 'class-validator';
+
+import { CreateFamiliarDto } from './familiar.dto';
 
 export class CreatePatientDto {
-
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
@@ -81,7 +80,6 @@ export class CreatePatientDto {
   @ValidateNested({ each: true })
   @Type(() => CreateFamiliarDto)
   readonly familiar: CreateFamiliarDto;
-
 }
 
 export class UpdatePatientDto extends PartialType(CreatePatientDto) {}

@@ -10,5 +10,5 @@ export default registerAs('config', () => {
       password: process.env.MYSQL_ROOT_PASSWORD,
     },
     jwt_secret: process.env.JWT_SECRET,
-  }
+  };
 });

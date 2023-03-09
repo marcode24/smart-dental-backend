@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { environments } from 'environment';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import * as Joi from 'joi';
 
-import config from './config';
-
-import { AuthModule } from './auth/auth.module';
-import { DatabaseModule } from './database/database.module';
-import { UserModule } from './user/user.module';
-import { ServiceModule } from './service/service.module';
-import { PatientModule } from './patient/patient.module';
-import { AppointmentModule } from './appointment/appointment.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AppointmentModule } from './appointment/appointment.module';
+import { AuthModule } from './auth/auth.module';
+import config from './config';
+import { DatabaseModule } from './database/database.module';
+import { PatientModule } from './patient/patient.module';
+import { ServiceModule } from './service/service.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -33,7 +33,7 @@ import { join } from 'path';
         MYSQL_ROOT_USERNAME: Joi.string().required(),
         MYSQL_ROOT_PASSWORD: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
-      })
+      }),
     }),
     DatabaseModule,
     AuthModule,

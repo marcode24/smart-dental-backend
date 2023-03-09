@@ -10,14 +10,14 @@ import {
   IsNumeric,
   Model,
   PrimaryKey,
-  Table
-} from "sequelize-typescript"
-import { User } from "src/user/entities/user.entity";
-import { Familiar } from "./familiar.entity";
+  Table,
+} from 'sequelize-typescript';
+import { User } from 'src/user/entities/user.entity';
+
+import { Familiar } from './familiar.entity';
 
 @Table({ timestamps: true, tableName: 'patient', initialAutoIncrement: '1000' })
 export class Patient extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -88,5 +88,4 @@ export class Patient extends Model {
 
   @Column(DataType.STRING(120))
   image: string;
-
 }

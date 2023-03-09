@@ -9,18 +9,16 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
-} from "sequelize-typescript";
+  Table,
+} from 'sequelize-typescript';
+import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.entity';
+import { Appointment } from 'src/appointment/entities/appointment.entity';
+import { Service } from 'src/service/entities/service.entity';
 
-import { AppointmentDetail } from "src/appointment/entities/appointment-detail.entity";
-import { Appointment } from "src/appointment/entities/appointment.entity";
-
-import { Service } from "src/service/entities/service.entity";
-import { Patient } from "./patient.entity";
+import { Patient } from './patient.entity';
 
 @Table({ timestamps: true, tableName: 'record', initialAutoIncrement: '100' })
 export class Record extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -83,6 +81,5 @@ export class Record extends Model {
   cancel_time: string;
 
   @BelongsToMany(() => Appointment, () => AppointmentDetail)
-  appointments: Array<Appointment & { AppoinmentDetail: AppointmentDetail }> ;
-
+  appointments: Array<Appointment & { AppoinmentDetail: AppointmentDetail }>;
 }

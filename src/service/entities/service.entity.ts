@@ -7,12 +7,15 @@ import {
   IsNumeric,
   Model,
   PrimaryKey,
-  Table
-} from "sequelize-typescript";
+  Table,
+} from 'sequelize-typescript';
 
-@Table({ timestamps: true, tableName: 'service', initialAutoIncrement: '10000' })
+@Table({
+  timestamps: true,
+  tableName: 'service',
+  initialAutoIncrement: '10000',
+})
 export class Service extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -28,7 +31,7 @@ export class Service extends Model {
 
   @AllowNull(false)
   @IsNumeric
-  @Column(DataType.DOUBLE({decimals: 2}))
+  @Column(DataType.DOUBLE({ decimals: 2 }))
   price: number;
 
   @AllowNull(true)
@@ -44,5 +47,4 @@ export class Service extends Model {
   @AllowNull(true)
   @Column(DataType.STRING(7))
   color: string;
-
 }

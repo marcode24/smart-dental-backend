@@ -1,18 +1,16 @@
-import { PartialType } from "@nestjs/mapped-types";
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsArray,
   IsDateString,
-  IsInstance,
   IsMilitaryTime,
   IsNotEmpty,
   IsNumber,
-  Validate,
-  ValidateIf
-} from "class-validator";
-import { StatusAppointment } from "../enums/status-appointment.enum";
+  ValidateIf,
+} from 'class-validator';
+
+import { StatusAppointment } from '../enums/status-appointment.enum';
 
 export class CreateAppointmentDto {
-
   @IsNotEmpty()
   @IsNumber()
   readonly id_patient: number;
@@ -38,9 +36,9 @@ export class CreateAppointmentDto {
   readonly status: string;
 }
 
-export class ChangeStatusAppointmentDto extends PartialType(CreateAppointmentDto) {
-
+export class ChangeStatusAppointmentDto extends PartialType(
+  CreateAppointmentDto,
+) {
   @IsNotEmpty()
   readonly status: StatusAppointment;
-
 }

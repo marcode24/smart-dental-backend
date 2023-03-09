@@ -7,7 +7,7 @@ export interface IStatistics {
 }
 
 export interface IStatisticsDays {
-  total: number,
+  total: number;
   total_quantity: number;
   id_service: number;
   realization_date: Date;

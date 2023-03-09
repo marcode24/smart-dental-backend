@@ -14,16 +14,15 @@ import {
 } from 'sequelize-typescript';
 import { Patient } from 'src/patient/entities/patient.entity';
 
-@Table({ timestamps: true, tableName: 'user', initialAutoIncrement: '1000'})
+@Table({ timestamps: true, tableName: 'user', initialAutoIncrement: '1000' })
 export class User extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
   id_user: number;
 
   @HasMany(() => Patient)
-  patient: Patient[]
+  patient: Patient[];
 
   @AllowNull(false)
   @Column(DataType.STRING(20))

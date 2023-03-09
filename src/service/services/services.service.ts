@@ -1,42 +1,44 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions, Op } from 'sequelize';
+
 import { CreateServiceDto, UpdateServiceDto } from '../dtos/service.dto';
 import { Service } from '../entities/service.entity';
 
 @Injectable()
 export class ServicesService {
-
-  constructor(
-    @InjectModel(Service) private serviceModel: typeof Service,
-  ) {}
+  constructor(@InjectModel(Service) private serviceModel: typeof Service) {}
 
   async create(data: CreateServiceDto) {
     const { price } = data;
     const priceRegex = new RegExp(/^[0-9]+(.[0-9]{1,2})?$/);
-    if(!price.toString().match(priceRegex)) {
+    if (!price.toString().match(priceRegex)) {
       return new BadRequestException('Must provide a valid price');
     }
-    const serviceCreated = await this.serviceModel.create({...data});
+    const serviceCreated = await this.serviceModel.create({ ...data });
     return serviceCreated;
   }
 
-  async findAll(name: string, limit: number = 5, offset: number = 0) {
+  async findAll(name: string, limit = 5, offset = 0) {
     const newLimit = limit || 5;
     const newOffset = offset || 0;
     let options: FindOptions = {
       limit: newLimit,
       offset: newOffset,
     };
-    if(name) {
-      const search = `%${name.toString()}%`
+    if (name) {
+      const search = `%${name.toString()}%`;
       options = {
         where: {
           name: { [Op.like]: search },
         },
       };
     }
-    const [ services, totalActive, totalInactive ] = await Promise.all([
+    const [services, totalActive, totalInactive] = await Promise.all([
       this.serviceModel.findAll(options),
       this.serviceModel.count({ where: { status: true } }),
       this.serviceModel.count({ where: { status: false } }),
@@ -45,19 +47,19 @@ export class ServicesService {
     return data;
   }
 
-  async findByFilter(odontogram: boolean = false) {
+  async findByFilter(odontogram = false) {
     const servicesFound = await this.serviceModel.findAll({
       where: {
         odontogram,
-        status: true
-      }
+        status: true,
+      },
     });
     return { services: servicesFound };
   }
 
   async findById(serviceId: number) {
     const serviceFound = await this.serviceModel.findByPk(serviceId);
-    if(!serviceFound) {
+    if (!serviceFound) {
       return new NotFoundException(`service not found with id: ${serviceId}`);
     }
     return serviceFound;
@@ -65,7 +67,7 @@ export class ServicesService {
 
   async changeStatus(serviceId: number, newValue: boolean) {
     const serviceDB = await this.serviceModel.findByPk(serviceId);
-    if(!serviceDB) {
+    if (!serviceDB) {
       return new NotFoundException(`service not found with id: ${serviceId}`);
     }
     serviceDB.status = Boolean(newValue);
@@ -76,8 +78,7 @@ export class ServicesService {
     return await this.serviceModel.update(changes, {
       where: {
         id_service: serviceId,
-      }
-    })
+      },
+    });
   }
-
 }

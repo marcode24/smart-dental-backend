@@ -1,21 +1,18 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FindOptions } from 'sequelize';
-
-import { Status } from '../enums/status.enum';
+import { Service } from 'src/service/entities/service.entity';
 
 import { CreateRecordDto, UpdateRecordDto } from '../dtos/record.dto';
 import { CreateToothDto, UpdateToothDto } from '../dtos/tooth.dto';
-
-import { Service } from 'src/service/entities/service.entity';
 import { Record } from '../entities/record.entity';
 import { Tooth } from '../entities/tooth.entity';
+import { Status } from '../enums/status.enum';
 
 import { RecordService } from './record.service';
 
 @Injectable()
 export class ToothService {
-
   constructor(
     @InjectModel(Tooth) private toothModel: typeof Tooth,
     private recordService: RecordService,
@@ -42,26 +39,28 @@ export class ToothService {
           },
           include: [
             {
-              model: Service
-            }
-          ]
-        }
-      ]
-    }
+              model: Service,
+            },
+          ],
+        },
+      ],
+    };
     return await this.toothModel.findAll(optionsQuery);
   }
 
-  async update(toothId: number, data: UpdateToothDto)  {
+  async update(toothId: number, data: UpdateToothDto) {
     const toothFound = await this.toothModel.findByPk(toothId, {
-      include: [{
-        model: Record,
-      }]
+      include: [
+        {
+          model: Record,
+        },
+      ],
     });
-    if(!toothFound) {
+    if (!toothFound) {
       return new NotFoundException(`tooth not found with id: ${toothId}`);
     }
     const { id_service, distal, ligual, mesial, oclusal, vestibular } = data;
-    if(toothFound.record.id_service !== id_service) {
+    if (toothFound.record.id_service !== id_service) {
       const payloadRecord: UpdateRecordDto = { id_service, quantity: 1 };
       const { id_record } = toothFound;
       await this.recordService.update(id_record, payloadRecord);
@@ -73,5 +72,4 @@ export class ToothService {
     toothFound.vestibular = vestibular || false;
     return await toothFound.save();
   }
-
 }

@@ -1,4 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+
 import { IPayloadToken } from '../models/token.model';
 
 export const GetCurrentUserId = createParamDecorator(
