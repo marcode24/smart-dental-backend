@@ -7,15 +7,14 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
-} from "sequelize-typescript";
+  Table,
+} from 'sequelize-typescript';
 
-import { Patient } from "./patient.entity";
-import { Record } from "./record.entity";
+import { Patient } from './patient.entity';
+import { Record } from './record.entity';
 
 @Table({ timestamps: false, tableName: 'tooth', initialAutoIncrement: '1' })
 export class Tooth extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -60,5 +59,4 @@ export class Tooth extends Model {
   @AllowNull(false)
   @Column(DataType.BOOLEAN)
   oclusal: boolean;
-
 }

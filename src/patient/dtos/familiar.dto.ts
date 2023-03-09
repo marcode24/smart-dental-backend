@@ -1,15 +1,14 @@
-import { PartialType } from "@nestjs/mapped-types";
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsEmail,
   IsNotEmpty,
   IsNumber,
   IsString,
   MaxLength,
-  MinLength
-} from "class-validator";
+  MinLength,
+} from 'class-validator';
 
 export class CreateFamiliarDto {
-
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
@@ -42,7 +41,6 @@ export class CreateFamiliarDto {
   @IsNotEmpty()
   @IsNumber()
   readonly familiar_phone_number: number;
-
 }
 
 export class UpdateFamiliarDto extends PartialType(CreateFamiliarDto) {}

@@ -1,24 +1,27 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
-
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { ISearchParamsStatistics } from 'src/common/models/search.model';
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
 import { CreateRecordDto, UpdateRecordDto } from '../dtos/record.dto';
-
 import { RecordService } from '../services/record.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('records')
 export class RecordController {
-
-  constructor(
-    private readonly recordService: RecordService,
-  ) {}
+  constructor(private readonly recordService: RecordService) {}
 
   @Roles(Role.ADMIN, Role.DENTIST)
   @Post()
@@ -30,16 +33,14 @@ export class RecordController {
   @Patch('/:recordId')
   changeStatus(
     @Param('recordId', ParseIntPipe) recordId: number,
-    @Query('status') newStatus: string
+    @Query('status') newStatus: string,
   ) {
     return this.recordService.changeStatus(recordId, newStatus);
   }
 
   @Roles(Role.ADMIN)
   @Get('/statistics')
-  getStatistics(
-    @Query('limit', ParseIntPipe) limit: number,
-  ) {
+  getStatistics(@Query('limit', ParseIntPipe) limit: number) {
     return this.recordService.statistics(limit);
   }
 
@@ -72,6 +73,4 @@ export class RecordController {
   ) {
     return this.recordService.update(recordId, payload);
   }
-
-
 }

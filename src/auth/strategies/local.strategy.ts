@@ -1,9 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-local';
 
-import { Strategy } from "passport-local";
-
-import { AuthService } from "../services/auth.service";
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
@@ -16,11 +15,14 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
 
   async validate(username: string, password: string) {
     const resp = await this.authService.validateUser(username, password);
-    if(resp.msg) {
+    if (resp.msg) {
       const { msg } = resp;
-      throw new UnauthorizedException((msg === 'user disabled') ? 'User disabled' : 'User or password are incorrect');
+      throw new UnauthorizedException(
+        msg === 'user disabled'
+          ? 'User disabled'
+          : 'User or password are incorrect',
+      );
     }
     return resp;
   }
-
 }

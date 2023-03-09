@@ -1,4 +1,4 @@
-import { PartialType } from "@nestjs/mapped-types";
+import { PartialType } from '@nestjs/mapped-types';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -8,10 +8,9 @@ import {
   MaxLength,
   MinLength,
   ValidateIf,
-} from "class-validator";
+} from 'class-validator';
 
 export class CreateServiceDto {
-
   @IsString()
   @IsNotEmpty()
   @MinLength(5)
@@ -39,7 +38,6 @@ export class CreateServiceDto {
   @MaxLength(255)
   @ValidateIf((_, value) => value !== null)
   readonly color: string;
-
 }
 
 export class UpdateServiceDto extends PartialType(CreateServiceDto) {}

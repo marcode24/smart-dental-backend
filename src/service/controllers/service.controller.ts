@@ -1,25 +1,27 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
-
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-
 import { Role } from 'src/auth/enums/roles.enum';
-
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-
 import { ParseIntPipe } from 'src/common/parse-int.pipe';
 
 import { CreateServiceDto, UpdateServiceDto } from '../dtos/service.dto';
-
 import { ServicesService } from '../services/services.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('services')
 export class ServicesController {
-
-  constructor(
-    private readonly serviceService: ServicesService
-  ) {}
+  constructor(private readonly serviceService: ServicesService) {}
 
   @Roles(Role.ADMIN)
   @Post()
@@ -39,9 +41,7 @@ export class ServicesController {
 
   @Roles(Role.ADMIN, Role.DENTIST)
   @Get('/all')
-  findByFilter(
-    @Query('odontogram') odontogram: string,
-  ) {
+  findByFilter(@Query('odontogram') odontogram: string) {
     const value = JSON.parse(odontogram);
     return this.serviceService.findByFilter(value);
   }
@@ -56,7 +56,7 @@ export class ServicesController {
   @Patch('/:id')
   changeStatus(
     @Param('id', ParseIntPipe) serviceId: number,
-    @Body('status') status: boolean
+    @Body('status') status: boolean,
   ) {
     return this.serviceService.changeStatus(serviceId, status);
   }
@@ -69,5 +69,4 @@ export class ServicesController {
   ) {
     return this.serviceService.update(serviceId, payload);
   }
-
 }

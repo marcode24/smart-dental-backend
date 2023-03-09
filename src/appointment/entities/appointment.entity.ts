@@ -9,17 +9,22 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
-} from "sequelize-typescript";
-import { Patient } from "src/patient/entities/patient.entity";
-import { Record } from "src/patient/entities/record.entity";
-import { User } from "src/user/entities/user.entity";
-import { StatusAppointment } from "../enums/status-appointment.enum";
-import { AppointmentDetail } from "./appointment-detail.entity";
+  Table,
+} from 'sequelize-typescript';
+import { Patient } from 'src/patient/entities/patient.entity';
+import { Record } from 'src/patient/entities/record.entity';
+import { User } from 'src/user/entities/user.entity';
 
-@Table({ timestamps: true, tableName: 'appointment', initialAutoIncrement: '1000' })
+import { StatusAppointment } from '../enums/status-appointment.enum';
+
+import { AppointmentDetail } from './appointment-detail.entity';
+
+@Table({
+  timestamps: true,
+  tableName: 'appointment',
+  initialAutoIncrement: '1000',
+})
 export class Appointment extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -56,7 +61,6 @@ export class Appointment extends Model {
   @Column(DataType.STRING(20))
   status: string;
 
-  @BelongsToMany(() => Record, () => AppointmentDetail )
+  @BelongsToMany(() => Record, () => AppointmentDetail)
   records: Array<Record & { AppoinmentDetail: AppointmentDetail }>;
-
 }

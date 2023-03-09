@@ -1,4 +1,16 @@
-import { Body, Controller, Get, HttpCode, NotFoundException, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/roles.enum';
@@ -13,10 +25,7 @@ import { UserService } from '../services/user.service';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
-
-  constructor(
-    private readonly userService: UserService
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Roles(Role.ADMIN)
   @Get()
@@ -26,7 +35,12 @@ export class UsersController {
     @Query('limit') limit?: number,
     @Query('offset') offset?: number,
   ) {
-    const optionsParams: ISearchParams = { fullname, limit, offset, all: (all === 'true') };
+    const optionsParams: ISearchParams = {
+      fullname,
+      limit,
+      offset,
+      all: all === 'true',
+    };
     return this.userService.findAll(optionsParams);
   }
 
@@ -34,7 +48,7 @@ export class UsersController {
   @Get('/:id')
   async findById(@Param('id', ParseIntPipe) userId: number) {
     const resp = await this.userService.findById(userId);
-    if(!resp.user) {
+    if (!resp.user) {
       return new NotFoundException(`user not found with id: ${userId}`);
     }
     return resp;
@@ -51,16 +65,14 @@ export class UsersController {
   @Patch('/:id')
   changeStatus(
     @Param('id', ParseIntPipe) userId: number,
-    @Body('status') status: boolean
+    @Body('status') status: boolean,
   ) {
     return this.userService.setStatusUser(userId, status);
   }
 
   @Roles(Role.ADMIN)
   @Patch('/changeCode/:idUser')
-  changeCode(
-    @Param('idUser', ParseIntPipe) userId: number
-  ) {
+  changeCode(@Param('idUser', ParseIntPipe) userId: number) {
     return this.userService.changeCode(userId);
   }
 
@@ -72,5 +84,4 @@ export class UsersController {
   ) {
     return this.userService.update(userId, payload);
   }
-
 }

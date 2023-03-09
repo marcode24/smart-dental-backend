@@ -7,7 +7,6 @@ import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-
   constructor(private reflector: Reflector) {
     super();
   }
@@ -15,7 +14,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const isPublic = this.reflector.get(IS_PUBLIC_KEY, context.getHandler())
+    const isPublic = this.reflector.get(IS_PUBLIC_KEY, context.getHandler());
     return isPublic ? true : super.canActivate(context);
   }
 }

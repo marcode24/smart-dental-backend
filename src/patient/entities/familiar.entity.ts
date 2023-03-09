@@ -1,20 +1,22 @@
 import {
   AllowNull,
   AutoIncrement,
-  BelongsTo,
   Column,
   DataType,
-  ForeignKey,
   HasOne,
   Model,
   PrimaryKey,
-  Table
-} from "sequelize-typescript";
-import { Patient } from "./patient.entity";
+  Table,
+} from 'sequelize-typescript';
 
-@Table({ timestamps: false, tableName: 'familiar', initialAutoIncrement: '1000' })
+import { Patient } from './patient.entity';
+
+@Table({
+  timestamps: false,
+  tableName: 'familiar',
+  initialAutoIncrement: '1000',
+})
 export class Familiar extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -46,5 +48,4 @@ export class Familiar extends Model {
   @AllowNull(false)
   @Column(DataType.BIGINT)
   familiar_phone_number: number;
-
 }

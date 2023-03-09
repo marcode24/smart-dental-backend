@@ -1,24 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Sequelize } from "sequelize-typescript";
-
-import config from 'src/config';
-
+import { Sequelize } from 'sequelize-typescript';
+import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.entity';
 import { Appointment } from 'src/appointment/entities/appointment.entity';
+import config from 'src/config';
 import { Familiar } from 'src/patient/entities/familiar.entity';
 import { Patient } from 'src/patient/entities/patient.entity';
 import { Record } from 'src/patient/entities/record.entity';
-import { Service } from 'src/service/entities/service.entity';
 import { Tooth } from 'src/patient/entities/tooth.entity';
+import { Service } from 'src/service/entities/service.entity';
 import { User } from 'src/user/entities/user.entity';
-import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.entity';
 
 @Module({
   imports: [
     SequelizeModule.forRootAsync({
-      inject: [ config.KEY ],
-      useFactory: async(configService: ConfigType<typeof config>) => {
+      inject: [config.KEY],
+      useFactory: async (configService: ConfigType<typeof config>) => {
         const { host, dbName, password, port, username } = configService.mysql;
         return {
           dialect: 'mysql',
@@ -30,14 +28,13 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
           synchronize: false,
           autoLoadModels: true,
         };
-
       },
     }),
   ],
   providers: [
     {
       provide: 'MYSQL',
-      inject: [ config.KEY ],
+      inject: [config.KEY],
       useFactory: async (configService: ConfigType<typeof config>) => {
         const { host, dbName, password, port, username } = configService.mysql;
         const sequelize = new Sequelize({
@@ -56,13 +53,13 @@ import { AppointmentDetail } from 'src/appointment/entities/appointment-detail.e
           Record,
           Tooth,
           Appointment,
-          AppointmentDetail
+          AppointmentDetail,
         ]);
         await sequelize.sync();
         return sequelize;
       },
     },
   ],
-  exports:['MYSQL', SequelizeModule],
+  exports: ['MYSQL', SequelizeModule],
 })
 export class DatabaseModule {}

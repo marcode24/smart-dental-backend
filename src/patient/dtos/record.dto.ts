@@ -1,14 +1,7 @@
-import { PartialType } from "@nestjs/mapped-types";
-import {
-  IsDateString,
-  IsNotEmpty,
-  IsNumber,
-  IsPositive,
-  ValidateIf,
-} from "class-validator";
+import { PartialType } from '@nestjs/mapped-types';
+import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
 
 export class CreateRecordDto {
-
   @IsNotEmpty()
   @IsNumber()
   @IsPositive()
@@ -23,7 +16,6 @@ export class CreateRecordDto {
   @IsNumber()
   @IsPositive()
   quantity: number;
-
 }
 
 export class UpdateRecordDto extends PartialType(CreateRecordDto) {}

@@ -5,14 +5,18 @@ import {
   ForeignKey,
   Model,
   PrimaryKey,
-  Table
-} from "sequelize-typescript";
-import { Record } from "src/patient/entities/record.entity";
-import { Appointment } from "./appointment.entity";
+  Table,
+} from 'sequelize-typescript';
+import { Record } from 'src/patient/entities/record.entity';
 
-@Table({ timestamps: false, tableName: 'appointment_detail', initialAutoIncrement: '1' })
+import { Appointment } from './appointment.entity';
+
+@Table({
+  timestamps: false,
+  tableName: 'appointment_detail',
+  initialAutoIncrement: '1',
+})
 export class AppointmentDetail extends Model {
-
   @PrimaryKey
   @AutoIncrement
   @Column(DataType.INTEGER)
@@ -25,5 +29,4 @@ export class AppointmentDetail extends Model {
   @ForeignKey(() => Record)
   @Column(DataType.INTEGER)
   id_record: number;
-
 }
