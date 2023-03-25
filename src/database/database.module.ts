@@ -27,6 +27,7 @@ import { User } from 'src/user/entities/user.entity';
           port,
           synchronize: false,
           autoLoadModels: true,
+          ssl: false,
         };
       },
     }),
