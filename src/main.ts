@@ -13,8 +13,8 @@ async function bootstrap() {
   );
   app.setGlobalPrefix('/api/v1/');
   const whitelist = [
-    'https://smart-dental.netlify.app/',
-    'http://localhost:3000/',
+    'https://smart-dental.netlify.app',
+    'http://localhost:3000',
     'http://localhost:4200',
   ];
   app.enableCors({
