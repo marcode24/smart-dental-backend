@@ -45,6 +45,12 @@ import { User } from 'src/user/entities/user.entity';
           password,
           username,
           port,
+          pool: {
+             max: 5,
+             min: 0,
+             acquire: 30000,
+             idle: 10000
+          },
         });
         sequelize.addModels([
           User,
