@@ -46,10 +46,10 @@ import { User } from 'src/user/entities/user.entity';
           username,
           port,
           pool: {
-             max: 5,
-             min: 0,
-             acquire: 30000,
-             idle: 10000
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000,
           },
         });
         sequelize.addModels([

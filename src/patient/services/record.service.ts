@@ -194,8 +194,8 @@ export class RecordService {
     const { limit, offset, option, type } = optionsParams;
     const newLimit: number = limit || 10;
     const newOffset: number = offset || 0;
-    const newOption: string = option || 'current';
-    const newType: string = type || 'month';
+    const newOption: string = option.trim() || 'current';
+    const newType: string = type.trim() || 'month';
 
     let sequelizeWhereQuery: any;
     switch (newType) {
