@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import * as bcrypt from 'bcrypt';
-import { FindOptions, Op } from 'sequelize';
+import { FindOptions, Op, Sequelize } from 'sequelize';
 import { Role } from 'src/auth/enums/roles.enum';
 import { AuthService } from 'src/auth/services/auth.service';
 import { ISearchParams } from 'src/common/models/search.model';
@@ -86,10 +86,22 @@ export class UserService {
         options = {
           attributes,
           where: {
-            [Op.or]: {
-              name: { [Op.like]: search },
-              last_name: { [Op.like]: search },
-            },
+            [Op.or]: [
+              Sequelize.where(
+                Sequelize.fn(
+                  'concat',
+                  Sequelize.col('name'),
+                  ' ',
+                  Sequelize.col('last_name'),
+                ),
+                {
+                  [Op.like]: search,
+                },
+              ),
+              { username: { [Op.like]: search } },
+              { email: { [Op.like]: search } },
+              { phone_number: { [Op.like]: search } },
+            ],
           },
         };
       }
