@@ -76,7 +76,7 @@ export class UsersController {
     return this.userService.changeCode(userId);
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.DENTIST)
   @Put('/:id')
   update(
     @Param('id', ParseIntPipe) userId: number,
