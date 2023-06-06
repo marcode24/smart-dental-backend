@@ -48,8 +48,8 @@ export class Patient extends Model {
   last_name: string;
 
   @AllowNull(false)
-  @Column(DataType.DATE)
-  date_birth: Date;
+  @Column(DataType.DATEONLY)
+  birth_date: Date;
 
   @AllowNull(false)
   @Column(DataType.STRING(10))
@@ -68,6 +68,10 @@ export class Patient extends Model {
   @AllowNull(false)
   @Column(DataType.STRING(50))
   street: string;
+
+  @AllowNull(false)
+  @Column(DataType.BIGINT)
+  number: number;
 
   @AllowNull(false)
   @Column(DataType.STRING(5))

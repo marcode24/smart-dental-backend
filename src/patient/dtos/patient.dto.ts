@@ -30,7 +30,7 @@ export class CreatePatientDto {
 
   @IsNotEmpty()
   @IsDateString()
-  readonly date_birth: Date;
+  readonly birth_date: Date;
 
   @IsNotEmpty()
   readonly gender: string;
@@ -48,6 +48,10 @@ export class CreatePatientDto {
   @MinLength(2)
   @MaxLength(50)
   readonly street: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  readonly number: number;
 
   @IsNotEmpty()
   @IsNumber()
